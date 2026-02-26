@@ -1,27 +1,47 @@
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
+import axios from 'axios';
+import { useState } from 'react';
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
   return (
-    <div className="h-100 bg-light">
-      {/* Центрирующий контейнер */}
-      <div className="container-fluid h-100">
-        <div className="row justify-content-center align-items-center h-100">
-          <div className="col-12 col-md-6 col-lg-4">
-            
-            {/* Карточка формы */}
-            <div className="card shadow">
-              <div className="card-body p-5">
-                <h1 className="h3 mb-4 text-center">Вход</h1>
-                
-                {/* Formik форма */}
-                <Formik
-                  initialValues={{ username: '', password: '' }}
-                  onSubmit={(values) => {
-                    console.log('Login form submitted:', values);
-                  }}
-                >
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-8 col-lg-6">
+          <div className="card">
+            <div className="card-header">
+              <h3 className="mb-0">Вход</h3>
+            </div>
+            <div className="card-body">
+              <Formik
+                initialValues={{ username: '', password: '' }}
+                onSubmit={async (values, { setSubmitting }) => {
+                  try {
+                    setError('');
+                    const response = await axios.post('/api/v1/login', {
+                      username: values.username,
+                      password: values.password,
+                    });
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('username', response.data.username);
+                    navigate('/');
+                  } catch (err) {
+                    setError('Неверное имя пользователя или пароль');
+                  } finally {
+                    setSubmitting(false);
+                  }
+                }}
+              >
+                {({ isSubmitting }) => (
                   <Form>
-                    <div className="mb-3">
+                    {error && (
+                      <div className="alert alert-danger mb-3">{error}</div>
+                    )}
+                    
+                    <div className="mb-4">
                       <label htmlFor="username" className="form-label">
                         Имя пользователя
                       </label>
@@ -29,13 +49,15 @@ function LoginPage() {
                         id="username"
                         name="username"
                         type="text"
-                        className="form-control"
+                        className="form-control form-control-lg"
+                        placeholder="admin"
                         autoComplete="username"
+                        disabled={isSubmitting}
                         required
                       />
                     </div>
 
-                    <div className="mb-3">
+                    <div className="mb-4">
                       <label htmlFor="password" className="form-label">
                         Пароль
                       </label>
@@ -43,24 +65,30 @@ function LoginPage() {
                         id="password"
                         name="password"
                         type="password"
-                        className="form-control"
+                        className="form-control form-control-lg"
+                        placeholder="admin"
                         autoComplete="current-password"
+                        disabled={isSubmitting}
                         required
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100">
-                      Войти
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary btn-lg w-100"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Входим...' : 'Войти'}
                     </button>
+                    
+                    <div className="mt-3 text-center">
+                      <small className="text-muted">
+                        Для теста: admin / admin
+                      </small>
+                    </div>
                   </Form>
-                </Formik>
-
-                <div className="text-center mt-4">
-                  <a href="/" className="text-decoration-none">
-                    На главную
-                  </a>
-                </div>
-              </div>
+                )}
+              </Formik>
             </div>
           </div>
         </div>

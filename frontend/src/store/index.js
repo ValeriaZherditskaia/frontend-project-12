@@ -3,7 +3,7 @@ import uiReducer from '../slices/uiSlice.js';
 
 export const store = configureStore({
   reducer: {
-    ui: uiReducer,
+    ui: uiReducer,  // Только ui для шага 5
   },
 });
 

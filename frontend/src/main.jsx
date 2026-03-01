@@ -6,6 +6,8 @@ import './index.css';
 import App from './App.jsx';
 import { store } from './store/index.js';
 
+console.log('🔥 STORE created:', store.getState());
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>

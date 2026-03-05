@@ -28,7 +28,7 @@ function LoginPage() {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('username', response.data.username);
                     navigate('/');
-                  } catch (err) {
+                  } catch {
                     setError('Неверное имя пользователя или пароль');
                   } finally {
                     setSubmitting(false);

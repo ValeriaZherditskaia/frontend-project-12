@@ -1,17 +1,23 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
-import AppLayout from './components/AppLayout.jsx';
+import Header from './components/Header';
+import AppLayout from './components/AppLayout';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
-    <div className="vh-100">
+    <div className="d-flex flex-column min-vh-100">
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<AppLayout />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <Header />
+        <main className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<AppLayout />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
       </BrowserRouter>
     </div>
   );

@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
   const navigate = useNavigate();
-  
+  const { t: translate } = useTranslation();
+
   const isAuthenticated = !!localStorage.getItem('token');
 
   const handleLogout = () => {
@@ -15,20 +17,18 @@ function Header() {
     <header className="bg-white shadow-sm border-bottom">
       <div className="container">
         <nav className="navbar py-3">
-          {/* 🔥 Hexlet Chat — ТЗ Hexlet */}
           <Link to="/" className="navbar-brand fw-bold h4 mb-0 text-primary">
-            Hexlet Chat
+            {translate('app.name')}
           </Link>
-          
-          {/* 🔥 Кнопка "Выйти" для авторизованных */}
+
           {isAuthenticated && (
             <div className="ms-auto">
-              <button 
+              <button
                 className="btn btn-outline-danger btn-sm"
                 onClick={handleLogout}
+                aria-label={translate('app.logout')}
               >
-                <i className="bi bi-box-arrow-right me-1"></i>
-                Выйти
+                {translate('app.logout')}
               </button>
             </div>
           )}

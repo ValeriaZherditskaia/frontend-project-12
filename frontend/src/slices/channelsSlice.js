@@ -70,6 +70,9 @@ const channelsSlice = createSlice({
       channelId: null,
       isOpen: false,
     },
+    createStatus: 'idle',
+    renameStatus: 'idle',
+    deleteStatus: 'idle',
   },
   reducers: {
     // Переключение каналов
@@ -102,42 +105,50 @@ const channelsSlice = createSlice({
       // CREATE
       .addCase(createChannel.pending, (state) => {
         state.loading = true;
+        state.createStatus = 'pending'; 
         state.error = null;
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
+        state.createStatus = 'fulfilled';
         state.entities.push(action.payload);  // Добавляем в список
         state.currentChannelId = action.payload.id;  // ТЗ: перейти в новый
         state.modal.isOpen = false;
       })
       .addCase(createChannel.rejected, (state, action) => {
         state.loading = false;
+        state.createStatus = 'rejected';
         state.error = action.payload;
       })
 
       // RENAME
       .addCase(renameChannel.pending, (state) => {
         state.loading = true;
+        state.renameStatus = 'pending';
         state.error = null;
       })
       .addCase(renameChannel.fulfilled, (state, action) => {
         state.loading = false;
+        state.renameStatus = 'fulfilled';
         const index = state.entities.findIndex(c => c.id === action.payload.id);
         state.entities[index] = action.payload;  // Обновляем
         state.modal.isOpen = false;
       })
       .addCase(renameChannel.rejected, (state, action) => {
         state.loading = false;
+        state.renameStatus = 'rejected'; 
         state.error = action.payload;
       })
 
       // DELETE
       .addCase(deleteChannel.pending, (state) => {
         state.loading = true;
+        state.deleteStatus = 'pending';
         state.error = null;
       })
       .addCase(deleteChannel.fulfilled, (state, action) => {
         state.loading = false;
+        state.deleteStatus = 'fulfilled';
         state.entities = state.entities.filter(c => c.id !== action.payload.id);
         // ТЗ: если удалён активный → в General (id:1)
         if (state.currentChannelId === action.payload.id) {
@@ -147,6 +158,7 @@ const channelsSlice = createSlice({
       })
       .addCase(deleteChannel.rejected, (state, action) => {
         state.loading = false;
+        state.deleteStatus = 'rejected';
         state.error = action.payload;
       });
   },

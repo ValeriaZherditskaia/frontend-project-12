@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
 import * as yup from 'yup';
+import Profanity from 'leo-profanity';
+import { useTranslation } from 'react-i18next';
 import { closeModal, createChannel, renameChannel, deleteChannel, clearError } from '../slices/channelsSlice.js';
 
 const CHANNEL_SCHEMA = yup.object({
@@ -15,6 +17,7 @@ const CHANNEL_SCHEMA = yup.object({
 
 function ChannelModal() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { 
     modal: { type, channelId, isOpen }, 
     error, 
@@ -24,15 +27,22 @@ function ChannelModal() {
 
   const currentChannel = channels.find((c) => c.id === channelId);
 
-  // Форма для add/rename
-  const handleFormSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleFormSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
+    const name = values.name.trim();
+
+    if (Profanity.check(name)) {
+      setFieldError('name', t('notifications.error.profanity'));
+      return;
+    }
+
     try {
       if (type === 'add') {
-        await dispatch(createChannel(values.name)).unwrap();
+        await dispatch(createChannel(name)).unwrap();
       } else if (type === 'rename') {
-        await dispatch(renameChannel({ id: channelId, name: values.name })).unwrap();
+        await dispatch(renameChannel({ id: channelId, name })).unwrap();
       }
       resetForm();
+      dispatch(closeModal());
     } catch (submitError) {
       console.error('Form submit error:', submitError);
     } finally {
@@ -40,7 +50,6 @@ function ChannelModal() {
     }
   };
 
-  // Удаление канала
   const handleDelete = async () => {
     try {
       await dispatch(deleteChannel(channelId)).unwrap();
@@ -49,9 +58,8 @@ function ChannelModal() {
     }
   };
 
-  // Заголовки модалок
   const modalTitles = {
-    add: 'Добавить канал',
+    add: t('modals.add', 'Добавить канал'),
     remove: `Удалить #${currentChannel?.name || ''}?`,
     rename: `Переименовать #${currentChannel?.name || ''}`,
   };
@@ -90,12 +98,14 @@ function ChannelModal() {
             validationSchema={CHANNEL_SCHEMA}
             onSubmit={handleFormSubmit}
             validateOnMount
-            enableReinitialize  // Обновление при смене канала
+            enableReinitialize
           >
             {({ isSubmitting, handleSubmit, errors }) => (
               <FormikForm noValidate className="needs-validation">
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="channelName">Название канала</Form.Label>
+                  <Form.Label htmlFor="channelName">
+                    {t('channels.title', 'Название канала')}
+                  </Form.Label>
                   <Field
                     id="channelName"
                     name="name"
@@ -118,14 +128,15 @@ function ChannelModal() {
                     onClick={() => dispatch(closeModal())}
                     disabled={loading}
                   >
-                    Отмена
+                    {t('modals.cancel', 'Отменить')}
                   </Button>
                   <Button 
                     variant="primary" 
                     type="submit"
-                    disabled={isSubmitting || loading || !handleSubmit}
+                    disabled={isSubmitting || loading}
                   >
-                    {loading ? 'Сохранение...' : type === 'add' ? 'Добавить' : 'Сохранить'}
+                    {loading ? t('modals.saving', 'Сохранение...') : 
+                     type === 'add' ? t('modals.add', 'Добавить') : t('modals.save', 'Сохранить')}
                   </Button>
                 </div>
               </FormikForm>
@@ -141,14 +152,14 @@ function ChannelModal() {
             onClick={() => dispatch(closeModal())}
             disabled={loading}
           >
-            Отмена
+            {t('modals.cancel', 'Отменить')}
           </Button>
           <Button 
             variant="danger" 
             onClick={handleDelete}
             disabled={loading}
           >
-            {loading ? 'Удаление...' : 'Удалить'}
+            {loading ? t('modals.deleting', 'Удаление...') : t('channels.remove', 'Удалить')}
           </Button>
         </Modal.Footer>
       )}

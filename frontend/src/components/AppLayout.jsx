@@ -1,4 +1,3 @@
-// src/components/AppLayout.jsx
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -13,16 +12,10 @@ import ChannelModal from './ChannelModal.jsx';
 function AppLayout() {
   const dispatch = useDispatch();
 
-  const {
-    channelsLoading,
-    messagesLoading,
-  } = useSelector((state) => state.ui);
+  const { channelsLoading, messagesLoading } = useSelector((state) => state.ui);
+  const { loading: channelsLoadingChannels } = useSelector((state) => state.channels);
 
-  const {
-    loading: channelsLoadingChannels,
-  } = useSelector((state) => state.channels);
-
-  // 🔥 Toast при потере/восстановлении сети
+  // toast при потере / восстановлении сети
   useEffect(() => {
     const handleOffline = () => {
       toast.error(i18n.t('notifications.error.network'), {
@@ -52,7 +45,7 @@ function AppLayout() {
     };
   }, []);
 
-  // начальная загрузка каналов и сообщений + проверка токена
+  // загрузка каналов и сообщений после проверки токена
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -64,10 +57,9 @@ function AppLayout() {
     dispatch(fetchMessages());
   }, [dispatch]);
 
-  // показ спиннера, пока что‑то грузится
   if (channelsLoading || messagesLoading || channelsLoadingChannels) {
     return (
-      <div className="container mt-5 text-center">
+      <div className="vw-100 vh-100 d-flex align-items-center justify-content-center bg-light">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Загрузка...</span>
         </div>
@@ -77,23 +69,30 @@ function AppLayout() {
 
   return (
     <>
-      <div className="container-fluid h-100 py-3">
-        <div className="row h-100">
-          {/* Левый блок: список каналов */}
-          <div className="col-4 col-md-3 border-end px-0">
-            <ChannelsList />
-          </div>
+      <div className="chat-container px-3">
+        <div className="card h-100 border-0 shadow">
+          <div className="card-body p-0 h-100 d-flex">
+            {/* Левая колонка: каналы */}
+            <aside className="channels-panel">
+              <ChannelsList />
+            </aside>
 
-          {/* Правый блок: заголовок, список сообщений, форма отправки */}
-          <div className="col-8 col-md-9 d-flex flex-column">
-            <ChatHeader />
-            <MessagesList />
-            <MessageForm />
+            {/* Правая часть: чат */}
+            <section className="chat-main position-relative">
+              <ChatHeader />
+
+              <div className="messages-scrollable">
+                <MessagesList />
+              </div>
+
+              <div className="message-form-container">
+                <MessageForm />
+              </div>
+            </section>
           </div>
         </div>
       </div>
 
-      {/* Модальное окно для добавления/редактирования/удаления канала */}
       <ChannelModal />
     </>
   );

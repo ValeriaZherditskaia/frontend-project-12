@@ -1,42 +1,90 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Глобальный reset для чата */
+* {
+  box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  overflow-x: hidden;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Главный контейнер чата — на весь экран */
+.chat-app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa; /* bg-light */
+}
+
+/* Панель каналов слева */
+.channels-panel {
+  background-color: white;
+  border-right: 1px solid #dee2e6;
+  min-height: 0; /* Важно для flex-child */
+  overflow: hidden;
+}
+
+/* Область сообщений — скролл + отступы */
+.messages-scrollable {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #adb5bd #f8f9fa;
+}
+
+.messages-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-scrollable::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.messages-scrollable::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 3px;
+}
+
+/* Форма внизу — не сжимается */
+.message-form-container {
+  flex-shrink: 0;
+  border-top: 1px solid #dee2e6;
+  background: white;
+}
+
+/* Адаптив: на мобиле каналы снизу */
+@media (max-width: 768px) {
+  .channels-panel {
+    order: 2;
+    flex-direction: row;
+    overflow-x: auto;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .chat-main {
+    order: 1;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Утилиты Bootstrap overrides */
+.g-0 {
+  --bs-gutter-x: 0;
 }
 
-.card {
-  padding: 2em;
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.read-the-docs {
-  color: #888;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hover эффекты */
+.channel-item:hover {
+  background-color: #e9ecef;
+}
+
+.btn:disabled {
+  opacity: 0.6;
 }

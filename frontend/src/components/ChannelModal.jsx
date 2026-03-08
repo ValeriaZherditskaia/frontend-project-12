@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { closeModal, createChannel, renameChannel, deleteChannel, clearError } from '../slices/channelsSlice.js';
 
 const CHANNEL_SCHEMA = yup.object({
-  name: yup.string()
+  name: yup
+    .string()
     .trim('Имя не может быть пустым')
     .min(3, 'От 3 до 20 символов')
     .max(20, 'От 3 до 20 символов')
@@ -100,7 +101,7 @@ function ChannelModal() {
             validateOnMount
             enableReinitialize
           >
-            {({ isSubmitting, handleSubmit, errors }) => (
+            {({ isSubmitting /* , handleSubmit, errors */ }) => (
               <FormikForm noValidate className="needs-validation">
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="channelName">
@@ -112,12 +113,10 @@ function ChannelModal() {
                     as={Form.Control}
                     autoFocus
                     disabled={loading || isSubmitting}
-                    aria-describedby={errors.name ? 'name-error' : undefined}
                   />
                   <ErrorMessage 
                     name="name" 
                     component="div" 
-                    id="name-error"
                     className="invalid-feedback d-block"
                   />
                 </Form.Group>

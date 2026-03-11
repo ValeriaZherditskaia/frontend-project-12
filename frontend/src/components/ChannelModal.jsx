@@ -1,10 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
-import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
+import {
+  Modal,
+  Button,
+  Form,
+  Alert,
+} from 'react-bootstrap';
+import {
+  Formik,
+  Field,
+  ErrorMessage,
+  Form as FormikForm,
+} from 'formik';
 import * as yup from 'yup';
 import Profanity from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
-import { closeModal, createChannel, renameChannel, deleteChannel, clearError } from '../slices/channelsSlice.js';
+import {
+  closeModal,
+  createChannel,
+  renameChannel,
+  deleteChannel,
+  clearError,
+} from '../slices/channelsSlice.js';
 
 const CHANNEL_SCHEMA = yup.object({
   name: yup
@@ -12,23 +28,30 @@ const CHANNEL_SCHEMA = yup.object({
     .trim('Имя не может быть пустым')
     .min(3, 'От 3 до 20 символов')
     .max(20, 'От 3 до 20 символов')
-    .matches(/^[a-zA-Zа-яёА-ЯЁ0-9\s\-_]+$/, 'Только буквы, цифры, пробелы, дефис, подчёркивание')
+    .matches(
+      /^[a-zA-Zа-яёА-ЯЁ0-9\s-_]+$/,
+      'Только буквы, цифры, пробелы, дефис, подчёркивание',
+    )
     .required('Название обязательно'),
 });
 
 function ChannelModal() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { 
-    modal: { type, channelId, isOpen }, 
-    error, 
+
+  const {
+    modal: { type, channelId, isOpen },
+    error,
     loading,
-    entities: channels 
+    entities: channels,
   } = useSelector((state) => state.channels);
 
   const currentChannel = channels.find((c) => c.id === channelId);
 
-  const handleFormSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
+  const handleFormSubmit = async (
+    values,
+    { setSubmitting, setFieldError, resetForm },
+  ) => {
     const name = values.name.trim();
 
     if (Profanity.check(name)) {
@@ -54,6 +77,7 @@ function ChannelModal() {
   const handleDelete = async () => {
     try {
       await dispatch(deleteChannel(channelId)).unwrap();
+      dispatch(closeModal());
     } catch (deleteError) {
       console.error('Delete error:', deleteError);
     }
@@ -68,16 +92,21 @@ function ChannelModal() {
   if (!isOpen) return null;
 
   return (
-    <Modal show={isOpen} onHide={() => dispatch(closeModal())} centered size="sm">
+    <Modal
+      show={isOpen}
+      onHide={() => dispatch(closeModal())}
+      centered
+      size="sm"
+    >
       <Modal.Header closeButton>
         <Modal.Title>{modalTitles[type]}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         {error && (
-          <Alert 
-            variant="danger" 
-            dismissible 
+          <Alert
+            variant="danger"
+            dismissible
             onClose={() => dispatch(clearError())}
           >
             {error}
@@ -87,7 +116,13 @@ function ChannelModal() {
         {type === 'remove' ? (
           <>
             <p className="mb-3">
-              Подтвердите удаление канала <strong>#{currentChannel?.name}</strong>.
+              Подтвердите удаление канала
+              {' '}
+              <strong>
+                #
+                {currentChannel?.name}
+              </strong>
+              .
             </p>
             <p className="text-muted small mb-0">
               Все сообщения будут удалены.
@@ -101,7 +136,7 @@ function ChannelModal() {
             validateOnMount
             enableReinitialize
           >
-            {({ isSubmitting /* , handleSubmit, errors */ }) => (
+            {({ isSubmitting }) => (
               <FormikForm noValidate className="needs-validation">
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="channelName">
@@ -114,28 +149,31 @@ function ChannelModal() {
                     autoFocus
                     disabled={loading || isSubmitting}
                   />
-                  <ErrorMessage 
-                    name="name" 
-                    component="div" 
+                  <ErrorMessage
+                    name="name"
+                    component="div"
                     className="invalid-feedback d-block"
                   />
                 </Form.Group>
 
                 <div className="d-flex justify-content-end gap-2">
-                  <Button 
+                  <Button
                     variant="secondary"
                     onClick={() => dispatch(closeModal())}
                     disabled={loading}
                   >
                     {t('modals.cancel', 'Отменить')}
                   </Button>
-                  <Button 
-                    variant="primary" 
+                  <Button
+                    variant="primary"
                     type="submit"
                     disabled={isSubmitting || loading}
                   >
-                    {loading ? t('modals.saving', 'Сохранение...') : 
-                     type === 'add' ? t('modals.add', 'Добавить') : t('modals.save', 'Сохранить')}
+                    {loading
+                      ? t('modals.saving', 'Сохранение...')
+                      : type === 'add'
+                        ? t('modals.add', 'Добавить')
+                        : t('modals.save', 'Сохранить')}
                   </Button>
                 </div>
               </FormikForm>
@@ -146,19 +184,21 @@ function ChannelModal() {
 
       {type === 'remove' && (
         <Modal.Footer>
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             onClick={() => dispatch(closeModal())}
             disabled={loading}
           >
             {t('modals.cancel', 'Отменить')}
           </Button>
-          <Button 
-            variant="danger" 
+          <Button
+            variant="danger"
             onClick={handleDelete}
             disabled={loading}
           >
-            {loading ? t('modals.deleting', 'Удаление...') : t('channels.remove', 'Удалить')}
+            {loading
+              ? t('modals.deleting', 'Удаление...')
+              : t('channels.remove', 'Удалить')}
           </Button>
         </Modal.Footer>
       )}

@@ -15,7 +15,7 @@ const TOAST_CONFIG = {
   'channels/deleteChannel/rejected': 'notifications.error.server',
 
   // Ошибки загрузки начальных данных
-  'ui/fetchChannels/rejected': 'notifications.error.loadData',
+  'channels/fetchChannels/rejected': 'notifications.error.loadData',
   'ui/fetchMessages/rejected': 'notifications.error.loadData',
 };
 

@@ -1,90 +1,323 @@
-/* Глобальный reset для чата */
-* {
-  box-sizing: border-box;
-}
+/* Hexlet Chat Demo */
+* { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  overflow-x: hidden;
-}
-
-/* Главный контейнер чата — на весь экран */
-.chat-app {
-  height: 100vh;
+#root {
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa; /* bg-light */
 }
 
-/* Панель каналов слева */
-.channels-panel {
-  background-color: white;
-  border-right: 1px solid #dee2e6;
-  min-height: 0; /* Важно для flex-child */
+/* Хедер приложения (Hexlet Chat + кнопка выхода) */
+.app-header {
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* Основной контейнер чата */
+.chat-container {
+  flex: 1;
+  padding: 1rem;
+  background: #f8f9fa;
+  height: calc(100vh - 56px);
   overflow: hidden;
 }
 
-/* Область сообщений — скролл + отступы */
-.messages-scrollable {
-  flex: 1 1 auto;
+/* Карточка чата */
+.card {
+  height: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  overflow: hidden;
+  border: 1px solid #dee2e6 !important;
+}
+
+.card-body {
+  display: flex;
+  padding: 0 !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Панель каналов */
+.channels-panel {
+  width: 280px;
+  background: #f8f9fa !important;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Заголовок каналов */
+.channels-panel > div:first-child {
+  height: 56px;
+  min-height: 56px;
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 1rem !important;
+}
+
+.channels-panel > div:first-child h6 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Кнопка «+» (стилизуем через класс) */
+.btn-add-channel {
+  width: 28px !important;
+  height: 28px !important;
+  background-color: #f8f9fa !important;
+  border: 2px solid #0d6efd !important;
+  color: #0d6efd !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  transition: all 0.15s ease-in-out !important;
+}
+.btn-add-channel:hover {
+  background-color: #e9ecef !important;
+  border-color: #0b5ed7 !important;
+  color: #0b5ed7 !important;
+}
+
+/* Список каналов */
+.channels-panel ul {
+  flex: 1;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #adb5bd #f8f9fa;
+  padding: 0.5rem !important;
+  margin: 0;
 }
 
-.messages-scrollable::-webkit-scrollbar {
-  width: 6px;
+/* Основная область чата */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  height: 100%;
+  overflow: hidden;
 }
 
-.messages-scrollable::-webkit-scrollbar-track {
-  background: #f8f9fa;
+/* Заголовок чата */
+.chat-main header {
+  min-height: 56px;
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0.5rem 1rem;
 }
 
-.messages-scrollable::-webkit-scrollbar-thumb {
-  background: #adb5bd;
-  border-radius: 3px;
+.chat-main header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #212529;
 }
 
-/* Форма внизу — не сжимается */
+/* Область сообщений */
+.messages-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+/* Сообщения */
+.message-item {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+.message-item strong {
+  font-weight: 600;
+  color: #212529;
+}
+.message-item span {
+  color: #212529;
+  margin-left: 0.25rem;
+}
+
+/* Форма сообщения */
 .message-form-container {
-  flex-shrink: 0;
+  height: 70px;
+  min-height: 70px;
   border-top: 1px solid #dee2e6;
-  background: white;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
-/* Адаптив: на мобиле каналы снизу */
-@media (max-width: 768px) {
-  .channels-panel {
-    order: 2;
-    flex-direction: row;
-    overflow-x: auto;
-  }
-  
-  .chat-main {
-    order: 1;
-  }
+/* Input группа */
+.message-form-container .input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 38px;
 }
 
-/* Утилиты Bootstrap overrides */
-.g-0 {
-  --bs-gutter-x: 0;
+.message-form-container textarea {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  resize: none;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  height: 38px !important;
+  min-height: 38px;
+}
+.message-form-container textarea:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+  border-right: none;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.message-form-container .btn-primary {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+.message-form-container .btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+.message-form-container .btn-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  opacity: 0.65;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* ===== КНОПКИ КАНАЛОВ И ДРОПДАУН (ЕДИНАЯ ВЫСОТА 28px) ===== */
+
+/* Общие стили для кнопок каналов (и обычных, и с дропдауном) */
+.channels-panel .btn-sm {
+  height: 28px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 28px !important;
+  font-size: 0.95rem;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* Hover эффекты */
-.channel-item:hover {
-  background-color: #e9ecef;
+/* Кнопки каналов (левая часть) – убираем лишние паддинги, оставляем только горизонтальные */
+.channels-panel .btn-sm.px-3 {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
 }
 
-.btn:disabled {
-  opacity: 0.6;
+/* Специально для кнопок в списке каналов, чтобы они не растягивались по высоте и не имели границ */
+.channels-panel button[class*="btn-"] {
+  height: 28px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 28px !important;
+  border: none !important; /* Убираем все границы у кнопок каналов */
+}
+
+/* Кнопки каналов (активные/неактивные) – фон и цвет */
+.channels-panel .btn-dark {
+  background-color: #495057 !important;
+  border-color: #495057 !important;
+  color: white !important;
+}
+.channels-panel .btn-dark:hover {
+  background-color: #5a6268 !important;
+}
+.channels-panel .btn-light {
+  background-color: transparent !important;
+  border: none !important;
+  color: #212529 !important;
+}
+.channels-panel .btn-light:hover {
+  background-color: #e9ecef !important;
+}
+
+/* Дропдаун – кнопка с троеточием */
+.channels-panel .dropdown-toggle {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  line-height: 1 !important;
+  background-color: transparent;
+  border: none !important;
+}
+
+/* Стрелка дропдауна (исправленная) */
+.channels-panel .dropdown-toggle::after {
+  display: inline-block !important;
+  margin-left: 0.255em !important;
+  vertical-align: middle !important;
+  content: "" !important;
+  border-top: 0.3em solid !important;
+  border-right: 0.3em solid transparent !important;
+  border-bottom: 0 !important;
+  border-left: 0.3em solid transparent !important;
+}
+
+/* Цвет стрелки в зависимости от состояния */
+.channels-panel .btn-dark.dropdown-toggle::after {
+  border-top-color: white !important;
+}
+.channels-panel .btn-light.dropdown-toggle::after {
+  border-top-color: #495057 !important;
+}
+
+/* Группа кнопок (ButtonGroup) – растягиваем на всю ширину и выравниваем */
+.channels-panel .btn-group {
+  display: flex !important;
+  width: 100% !important;
+}
+.channels-panel .btn-group > .btn:first-child {
+  flex: 1 1 auto !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.channels-panel .btn-group > .dropdown-toggle {
+  flex: 0 0 auto !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+/* Bootstrap overrides */
+.btn-primary {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+.btn-primary:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0a58ca !important;
+}
+
+/* Глобально убираем скролл */
+body {
+  overflow: hidden;
+}
+
+/* Отступ снизу формы */
+.chat-main form {
+  margin-bottom: 1rem;
 }

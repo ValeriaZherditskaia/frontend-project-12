@@ -5,29 +5,28 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const LOGIN_SCHEMA = yup.object({
-  username: yup.string().min(3, 'От 3 символов').required('Обязательно'),
-  password: yup.string().min(6, 'От 6 символов').required('Обязательно'),
-});
-
 function LoginPage() {
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const { t: translate } = useTranslation();
+  const { t } = useTranslation();
+
+  const validationSchema = yup.object({
+    username: yup.string().required(t('login.validation.username.required')),
+    password: yup.string().required(t('login.validation.password.required')),
+  });
 
   return (
-    // Высота = 100% от main, без vh-100 → нет лишнего скролла
     <div className="h-100 bg-light d-flex align-items-center justify-content-center py-4">
       <div className="w-100" style={{ maxWidth: '500px', minWidth: '320px' }}>
         <div className="card shadow-lg border-0">
           <div className="card-body p-5">
             <h2 className="h4 fw-normal mb-4 text-center text-dark">
-              {translate('login.title')}
+              {t('login.title')}
             </h2>
 
             <Formik
               initialValues={{ username: '', password: '' }}
-              validationSchema={LOGIN_SCHEMA}
+              validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
                   setError('');
@@ -35,11 +34,14 @@ function LoginPage() {
                     username: values.username,
                     password: values.password,
                   });
+                  
                   localStorage.setItem('token', response.data.token);
                   localStorage.setItem('username', response.data.username);
+                  
                   navigate('/');
-                } catch {
-                  setError(translate('login.error'));
+                } catch (err) {
+                  setError(t('login.error'));
+                  console.error('Login error:', err.response?.data);
                 } finally {
                   setSubmitting(false);
                 }
@@ -54,11 +56,8 @@ function LoginPage() {
                   )}
 
                   <div className="mb-4">
-                    <label
-                      htmlFor="username"
-                      className="form-label fw-semibold mb-2"
-                    >
-                      {translate('login.username')}
+                    <label htmlFor="username" className="form-label fw-semibold mb-2">
+                      {t('login.username')}
                     </label>
                     <Field
                       id="username"
@@ -73,18 +72,13 @@ function LoginPage() {
                       disabled={isSubmitting}
                     />
                     {touched.username && errors.username && (
-                      <div className="invalid-feedback">
-                        {errors.username}
-                      </div>
+                      <div className="invalid-feedback">{errors.username}</div>
                     )}
                   </div>
 
                   <div className="mb-4">
-                    <label
-                      htmlFor="password"
-                      className="form-label fw-semibold mb-2"
-                    >
-                      {translate('login.password')}
+                    <label htmlFor="password" className="form-label fw-semibold mb-2">
+                      {t('login.password')}
                     </label>
                     <Field
                       id="password"
@@ -98,9 +92,7 @@ function LoginPage() {
                       disabled={isSubmitting}
                     />
                     {touched.password && errors.password && (
-                      <div className="invalid-feedback">
-                        {errors.password}
-                      </div>
+                      <div className="invalid-feedback">{errors.password}</div>
                     )}
                   </div>
 
@@ -109,18 +101,13 @@ function LoginPage() {
                     className="btn btn-primary w-100 py-3 fw-semibold btn-lg"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting
-                      ? `${translate('login.submit')}...`
-                      : translate('login.submit')}
+                    {isSubmitting ? `${t('login.submit')}...` : t('login.submit')}
                   </button>
 
                   <div className="text-center mt-4 pt-3 border-top">
-                    <Link
-                      to="/signup"
-                      className="text-muted text-decoration-none fw-semibold"
-                    >
+                    <Link to="/signup" className="text-muted text-decoration-none fw-semibold">
                       <i className="bi bi-person-plus me-1" />
-                      {translate('login.signupLink')}
+                      {t('login.signupLink')}
                     </Link>
                   </div>
                 </Form>

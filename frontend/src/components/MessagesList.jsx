@@ -1,30 +1,29 @@
-import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from 'react';
 
 function MessagesList() {
-  const { t } = useTranslation();
-  const { messages } = useSelector((state) => state.ui);
+  const messages = useSelector((state) => state.ui.messages || []);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const messagesEndRef = useRef(null);
 
+  // Фильтруем сообщения по текущему каналу и сортируем по времени
+  const currentMessages = messages
+    .filter((msg) => Number(msg.channelId) === Number(currentChannelId))
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+  // Автоскролл к последнему сообщению
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [currentMessages]);
 
   return (
-    <div className="flex-grow-1 mb-3 overflow-auto border rounded p-3 bg-light h-100 position-relative">
-      {messages.length === 0 ? (
-        <p className="text-muted mb-0 text-center mt-5">
-          {t('chat.noMessages', 'Сообщений пока нет')}
-        </p>
-      ) : (
-        messages.map((message) => (
-          <div key={message.id} className="mb-2 p-2 bg-white rounded shadow-sm">
-            <strong className="text-primary me-2">{message.username}</strong>
-            <span>{message.body}</span>
-          </div>
-        ))
-      )}
+    <div className="messages-scrollable">
+      {currentMessages.map((msg) => (
+        <div key={msg.id} className="message-item">
+          <strong>{msg.username}:</strong>
+          <span className="ms-1">{msg.text}</span>
+        </div>
+      ))}
       <div ref={messagesEndRef} />
     </div>
   );

@@ -1,102 +1,136 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setCurrentChannelId, openModal } from '../slices/channelsSlice.js';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import {
+  setCurrentChannelId,
+  openModal,
+} from '../slices/channelsSlice.js';
 
 function ChannelsList() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const {
-    entities: channelsList,
-    currentChannelId: activeChannelId,
-    loading: channelsLoading,
-  } = useSelector((state) => state.channels);
+  const channels = useSelector((state) => state.channels.entities);
+  const activeChannelId = useSelector((state) => state.channels.currentChannelId);
 
-  const handleChannelClick = (e, channelId) => {
-    e.stopPropagation();
+  const handleChannelClick = (channelId) => {
     dispatch(setCurrentChannelId(channelId));
   };
 
-  const handleMenuAction = (actionType, channelId) => {
-    dispatch(openModal({ type: actionType, channelId }));
-    // Закрываем открытые dropdown'ы (бутафорский фикс верстки)
-    const dropdowns = document.querySelectorAll('.dropdown-menu.show');
-    dropdowns.forEach((dropdown) => dropdown.classList.remove('show'));
-  };
-
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
-        <h6 className="mb-0 fw-bold text-primary">
-          {t('channels.title') /* 'Каналы' */}
+    <div className="h-100 d-flex flex-column">
+      {/* Заголовок панели каналов */}
+      <div className="d-flex align-items-center p-3 border-bottom" style={{ backgroundColor: '#f8f9fa' }}>
+        <h6 className="mb-0 fw-bold flex-grow-1 text-start" style={{ color: '#212529' }}>
+          {t('channels.title')}
         </h6>
         <button
           type="button"
-          className="btn btn-primary btn-sm px-2 py-1"
+          className="btn btn-sm p-0 btn-add-channel"
           onClick={() => dispatch(openModal({ type: 'add' }))}
-          disabled={channelsLoading}
+          title={t('channels.new')}
         >
-          <i className="bi bi-plus me-1" />
-          {t('channels.new') /* 'Новый канал' */}
+          +
         </button>
       </div>
 
-      <ul
-        className="nav flex-column nav-pills p-2"
-        style={{ gap: '0.25rem' }}
-      >
-        {channelsList.map((channel) => (
-          <li key={channel.id} className="nav-item w-100">
-            <div className="dropdown w-100">
-              <button
-                className={`w-100 text-start btn btn-sm rounded-0 text-truncate py-2 px-3 ${
-                  channel.id === activeChannelId
-                    ? 'btn-primary text-white shadow-sm'
-                    : 'btn-light border hover-shadow'
-                }`}
-                type="button"
-                onClick={(e) => handleChannelClick(e, channel.id)}
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <span className="me-2">#</span>
-                <span
-                  className="text-truncate d-inline-block flex-grow-1"
-                  style={{ maxWidth: '85%' }}
-                >
-                  {channel.name}
-                </span>
-              </button>
+      {/* Список каналов */}
+      <ul className="nav flex-column nav-pills p-2 flex-grow-1 overflow-auto">
+        {channels.map((channel) => {
+          const isActive = channel.id === activeChannelId;
+          const isRemovable = channel.removable;
 
-              <ul className="dropdown-menu w-100 shadow border-0 mt-1">
-                <li>
+          return (
+            <li key={channel.id} className="nav-item w-100 mb-1">
+              {isRemovable ? (
+                <ButtonGroup className="w-100">
                   <button
                     type="button"
-                    className="dropdown-item d-flex align-items-center"
-                    onClick={() => handleMenuAction('rename', channel.id)}
+                    className={`flex-grow-1 text-start btn btn-sm rounded-0 px-3 py-2 d-flex align-items-center ${
+                      isActive ? 'btn-dark text-white' : 'btn-light border-0'
+                    }`}
+                    style={{
+                      backgroundColor: isActive ? '#495057' : 'transparent',
+                      border: 'none',
+                    }}
+                    onClick={() => handleChannelClick(channel.id)}
                   >
-                    <i className="bi bi-pencil-square me-2 text-primary" />
-                    {t('channels.rename') /* 'Переименовать' */}
-                  </button>
-                </li>
-                {channel.removable && (
-                  <li>
-                    <button
-                      type="button"
-                      className="dropdown-item d-flex align-items-center text-danger"
-                      onClick={() => handleMenuAction('remove', channel.id)}
+                    <span
+                      className={`me-2 ${isActive ? 'text-white-50' : 'text-secondary'}`}
                     >
-                      <i className="bi bi-trash3 me-2" />
-                      {t('channels.remove') /* 'Удалить' */}
-                    </button>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </li>
-        ))}
+                      #
+                    </span>
+                    <span className="flex-grow-1 text-truncate">
+                      {channel.name}
+                    </span>
+                  </button>
+
+                  <Dropdown align="end">
+                    <Dropdown.Toggle
+                      variant={isActive ? 'dark' : 'light'}
+                      size="sm"
+                      className="rounded-0 border-0 px-2"
+                      style={{
+                        backgroundColor: isActive ? '#495057' : 'transparent',
+                        color: isActive ? 'white' : '#495057',
+                      }}
+                    >
+                      <span className="visually-hidden">
+                        {t('channels.title')}
+                      </span>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() =>
+                          dispatch(
+                            openModal({ type: 'rename', channelId: channel.id })
+                          )
+                        }
+                      >
+                        {t('channels.rename')}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        className="text-danger"
+                        onClick={() =>
+                          dispatch(
+                            openModal({ type: 'remove', channelId: channel.id })
+                          )
+                        }
+                      >
+                        {t('channels.remove')}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </ButtonGroup>
+              ) : (
+                <button
+                  type="button"
+                  className={`w-100 text-start btn btn-sm rounded-0 px-3 py-2 d-flex align-items-center ${
+                    isActive ? 'btn-dark text-white' : 'btn-light border-0'
+                  }`}
+                  style={{
+                    backgroundColor: isActive ? '#495057' : 'transparent',
+                    border: 'none',
+                  }}
+                  onClick={() => handleChannelClick(channel.id)}
+                >
+                  <span
+                    className={`me-2 ${isActive ? 'text-white-50' : 'text-secondary'}`}
+                  >
+                    #
+                  </span>
+                  <span className="flex-grow-1 text-truncate">
+                    {channel.name}
+                  </span>
+                </button>
+              )}
+            </li>
+          );
+        })}
       </ul>
-    </>
+    </div>
   );
 }
 

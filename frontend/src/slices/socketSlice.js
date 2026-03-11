@@ -1,8 +1,5 @@
-/*
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import io from 'socket.io-client';
-
-const SOCKET_URL = 'http://localhost:5000';
 
 export const initSocket = createAsyncThunk(
   'socket/initSocket',
@@ -12,7 +9,8 @@ export const initSocket = createAsyncThunk(
       return rejectWithValue('No token');
     }
 
-    const socket = io(SOCKET_URL, {
+    // Подключаемся к корневому пути, который будет проксирован на сервер
+    const socket = io({
       auth: { token },
       reconnection: true,
       timeout: 20000,
@@ -27,26 +25,23 @@ const socketSlice = createSlice({
   initialState: {
     socket: null,
     connected: false,
-    newMessages: [],
   },
   reducers: {
     setConnected: (state, action) => {
       state.connected = action.payload;
     },
-    addNewMessage: (state, action) => {
-      state.newMessages.push(action.payload);
-    },
-    clearNewMessages: (state) => {
-      state.newMessages = [];
-    },
   },
   extraReducers: (builder) => {
-    builder.addCase(initSocket.fulfilled, (state, action) => {
-      state.socket = action.payload.socket;
-    });
+    builder
+      .addCase(initSocket.fulfilled, (state, action) => {
+        state.socket = action.payload.socket;
+      })
+      .addCase(initSocket.rejected, (state, action) => {
+        console.error('Socket initialization failed:', action.payload);
+        state.connected = false;
+      });
   },
 });
 
-export const { setConnected, addNewMessage, clearNewMessages } = socketSlice.actions;
+export const { setConnected } = socketSlice.actions;
 export default socketSlice.reducer;
-*/

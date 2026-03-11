@@ -1,173 +1,191 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import * as yup from 'yup';
 
-// Схема валидации имён каналов (ТЗ: 3-20 символов, уникальные)
-const CHANNEL_NAME_SCHEMA = yup.string()
-  .trim('Имя не может быть пустым')
-  .min(3, 'От 3 до 20 символов')
-  .max(20, 'От 3 до 20 символов')
-  .matches(/^[a-zA-Zа-яёА-ЯЁ0-9\s\-_]+$/, 'Только буквы, цифры, пробелы, дефис, подчёркивание')
-  .required('Название обязательно');
+// ---------- Thunks для работы с каналами ----------
 
+// Загрузка списка каналов
+export const fetchChannels = createAsyncThunk(
+  'channels/fetchChannels',
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get('/api/v1/channels', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Ошибка загрузки каналов');
+    }
+  }
+);
+
+// Создание нового канала
 export const createChannel = createAsyncThunk(
   'channels/createChannel',
   async (name, { rejectWithValue }) => {
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-      const _response = await axios.post('/api/v1/channels', 
-        { name: name.trim() }, 
+      const response = await axios.post(
+        '/api/v1/channels',
+        { name },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      return _response.data;  // {id: 3, name: "новый", removable: true}
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Ошибка создания канала');
+      return response.data; // сервер возвращает созданный канал
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Ошибка создания канала');
     }
   }
 );
 
+// Переименование канала
 export const renameChannel = createAsyncThunk(
   'channels/renameChannel',
   async ({ id, name }, { rejectWithValue }) => {
+    const token = localStorage.getItem('token');
     try {
-      await CHANNEL_NAME_SCHEMA.validate(name);
-      const token = localStorage.getItem('token');
-      const _response = await axios.patch(`/api/v1/channels/${id}`, 
-        { name: name.trim() }, 
+      const response = await axios.patch(
+        `/api/v1/channels/${id}`,
+        { name },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      return _response.data;
-    } catch (error) {
-      return rejectWithValue(error.message || 'Ошибка переименования');
+      return response.data; // сервер возвращает обновлённый канал
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Ошибка переименования канала');
     }
   }
 );
 
+// Удаление канала
 export const deleteChannel = createAsyncThunk(
   'channels/deleteChannel',
   async (id, { rejectWithValue }) => {
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-      const _response = await axios.delete(`/api/v1/channels/${id}`, {
+      await axios.delete(`/api/v1/channels/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      return { id };  // Для reducer
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Ошибка удаления');
+      return id; // возвращаем id удалённого канала для обработки в редьюсере
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Ошибка удаления канала');
     }
   }
 );
 
+// ---------- Слайс ----------
 const channelsSlice = createSlice({
   name: 'channels',
   initialState: {
-    entities: [],           // [{id:1,name:"general",removable:false},...]
-    currentChannelId: 1,    // Активный канал (General по умолчанию)
-    loading: false,
-    error: null,
-    modal: {
-      type: null,      // 'add' | 'rename' | 'remove'
-      channelId: null,
+    entities: [],                // список каналов
+    currentChannelId: null,       // ID текущего канала
+    loading: false,               // индикатор загрузки (для fetch и операций)
+    error: null,                  // текст ошибки для отображения в модалке
+    modal: {                      // состояние модального окна
       isOpen: false,
+      type: null,                 // 'add', 'rename', 'remove'
+      channelId: null,            // ID канала для rename/remove
     },
-    createStatus: 'idle',
-    renameStatus: 'idle',
-    deleteStatus: 'idle',
   },
   reducers: {
-    // Переключение каналов
     setCurrentChannelId: (state, action) => {
       state.currentChannelId = action.payload;
     },
-    
-    // Управление модалкой
     openModal: (state, action) => {
-      state.modal = { 
-        ...state.modal, 
-        ...action.payload, 
-        isOpen: true 
-      };
-      state.error = null;
+      state.modal.isOpen = true;
+      state.modal.type = action.payload.type;
+      state.modal.channelId = action.payload.channelId || null;
+      state.error = null; // очищаем старую ошибку при открытии
     },
     closeModal: (state) => {
-      state.modal = { type: null, channelId: null, isOpen: false };
+      state.modal.isOpen = false;
+      state.modal.type = null;
+      state.modal.channelId = null;
       state.error = null;
     },
-    
-    // Очистка ошибок
     clearError: (state) => {
       state.error = null;
     },
   },
-  // 🔥 extraReducers — обработка thunk'ов
   extraReducers: (builder) => {
     builder
-      // CREATE
+      // ----- fetchChannels -----
+      .addCase(fetchChannels.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchChannels.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entities = action.payload;
+        // если текущий канал не выбран, устанавливаем первый (обычно general)
+        if (!state.currentChannelId && action.payload?.length > 0) {
+          state.currentChannelId = action.payload[0].id;
+        }
+      })
+      .addCase(fetchChannels.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Ошибка загрузки каналов';
+      })
+
+      // ----- createChannel -----
       .addCase(createChannel.pending, (state) => {
         state.loading = true;
-        state.createStatus = 'pending'; 
         state.error = null;
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
-        state.createStatus = 'fulfilled';
-        state.entities.push(action.payload);  // Добавляем в список
-        state.currentChannelId = action.payload.id;  // ТЗ: перейти в новый
-        state.modal.isOpen = false;
+        state.entities.push(action.payload); // добавляем новый канал
+        // переключаемся на созданный канал (по желанию)
+        state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {
         state.loading = false;
-        state.createStatus = 'rejected';
-        state.error = action.payload;
+        state.error = action.payload || 'Ошибка создания канала';
       })
 
-      // RENAME
+      // ----- renameChannel -----
       .addCase(renameChannel.pending, (state) => {
         state.loading = true;
-        state.renameStatus = 'pending';
         state.error = null;
       })
       .addCase(renameChannel.fulfilled, (state, action) => {
         state.loading = false;
-        state.renameStatus = 'fulfilled';
-        const index = state.entities.findIndex(c => c.id === action.payload.id);
-        state.entities[index] = action.payload;  // Обновляем
-        state.modal.isOpen = false;
+        const updatedChannel = action.payload;
+        const index = state.entities.findIndex(c => c.id === updatedChannel.id);
+        if (index !== -1) {
+          state.entities[index] = updatedChannel;
+        }
       })
       .addCase(renameChannel.rejected, (state, action) => {
         state.loading = false;
-        state.renameStatus = 'rejected'; 
-        state.error = action.payload;
+        state.error = action.payload || 'Ошибка переименования канала';
       })
 
-      // DELETE
+      // ----- deleteChannel -----
       .addCase(deleteChannel.pending, (state) => {
         state.loading = true;
-        state.deleteStatus = 'pending';
         state.error = null;
       })
       .addCase(deleteChannel.fulfilled, (state, action) => {
         state.loading = false;
-        state.deleteStatus = 'fulfilled';
-        state.entities = state.entities.filter(c => c.id !== action.payload.id);
-        // ТЗ: если удалён активный → в General (id:1)
-        if (state.currentChannelId === action.payload.id) {
-          state.currentChannelId = 1;
+        const deletedId = action.payload; // id удалённого канала
+        state.entities = state.entities.filter(c => c.id !== deletedId);
+        // если удалили текущий канал — переключаемся на general (id=1)
+        if (state.currentChannelId === deletedId) {
+          const general = state.entities.find(c => c.id === 1);
+          state.currentChannelId = general ? general.id : (state.entities[0]?.id || null);
         }
-        state.modal.isOpen = false;
       })
       .addCase(deleteChannel.rejected, (state, action) => {
         state.loading = false;
-        state.deleteStatus = 'rejected';
-        state.error = action.payload;
+        state.error = action.payload || 'Ошибка удаления канала';
       });
   },
 });
 
-export const { 
-  setCurrentChannelId, 
-  openModal, 
-  closeModal, 
-  clearError 
+export const {
+  setCurrentChannelId,
+  openModal,
+  closeModal,
+  clearError,
 } = channelsSlice.actions;
+
 export default channelsSlice.reducer;

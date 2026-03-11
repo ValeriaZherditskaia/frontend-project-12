@@ -5,27 +5,27 @@ import * as yup from 'yup';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
-const REGISTRATION_SCHEMA = yup.object({
-  username: yup
-    .string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .matches(/^[a-zA-Z0-9_-]+$/, 'Только буквы, цифры, _, -')
-    .required('Имя пользователя обязательно'),
-  password: yup
-    .string()
-    .min(6, 'Не менее 6 символов')
-    .required('Пароль обязателен'),
-  passwordConfirm: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Пароли должны совпадать')
-    .required('Подтвердите пароль'),
-});
-
 function SignupPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
-  const { t: translate } = useTranslation();
+  const { t } = useTranslation();
+
+  const validationSchema = yup.object({
+    username: yup
+      .string()
+      .min(3, t('signup.validation.username.min'))
+      .max(20, t('signup.validation.username.max'))
+      .matches(/^[a-zA-Z0-9_-]+$/, t('signup.validation.username.pattern'))
+      .required(t('signup.validation.username.required')),
+    password: yup
+      .string()
+      .min(6, t('signup.validation.password.min'))
+      .required(t('signup.validation.password.required')),
+    passwordConfirm: yup
+      .string()
+      .oneOf([yup.ref('password')], t('signup.validation.passwordConfirm.mismatch'))
+      .required(t('signup.validation.passwordConfirm.required')),
+  });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -39,9 +39,9 @@ function SignupPage() {
       navigate('/');
     } catch (error) {
       if (error.response?.status === 409) {
-        setServerError(translate('signup.userExists'));
+        setServerError(t('signup.userExists'));
       } else {
-        setServerError(translate('signup.serverError'));
+        setServerError(t('signup.serverError'));
       }
     } finally {
       setSubmitting(false);
@@ -49,13 +49,12 @@ function SignupPage() {
   };
 
   return (
-    // h-100, без vh-100 → высота как у чата, без скролла страницы
     <div className="h-100 bg-light d-flex align-items-center justify-content-center py-4">
       <div className="w-100" style={{ maxWidth: '500px', minWidth: '320px' }}>
         <div className="card shadow-lg border-0">
           <div className="card-body p-5">
             <h2 className="h4 fw-normal mb-4 text-center text-dark">
-              {translate('signup.title')}
+              {t('signup.title')}
             </h2>
 
             {serverError && (
@@ -70,17 +69,14 @@ function SignupPage() {
                 password: '',
                 passwordConfirm: '',
               }}
-              validationSchema={REGISTRATION_SCHEMA}
+              validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting, errors, touched }) => (
                 <Form noValidate>
                   <div className="mb-4">
-                    <label
-                      htmlFor="username"
-                      className="form-label fw-semibold mb-2"
-                    >
-                      {translate('signup.username')}
+                    <label htmlFor="username" className="form-label fw-semibold mb-2">
+                      {t('signup.username')}
                     </label>
                     <Field
                       id="username"
@@ -94,18 +90,13 @@ function SignupPage() {
                       disabled={isSubmitting}
                     />
                     {touched.username && errors.username && (
-                      <div className="invalid-feedback">
-                        {errors.username}
-                      </div>
+                      <div className="invalid-feedback">{errors.username}</div>
                     )}
                   </div>
 
                   <div className="mb-4">
-                    <label
-                      htmlFor="password"
-                      className="form-label fw-semibold mb-2"
-                    >
-                      {translate('signup.password')}
+                    <label htmlFor="password" className="form-label fw-semibold mb-2">
+                      {t('signup.password')}
                     </label>
                     <Field
                       id="password"
@@ -118,35 +109,26 @@ function SignupPage() {
                       disabled={isSubmitting}
                     />
                     {touched.password && errors.password && (
-                      <div className="invalid-feedback">
-                        {errors.password}
-                      </div>
+                      <div className="invalid-feedback">{errors.password}</div>
                     )}
                   </div>
 
                   <div className="mb-4">
-                    <label
-                      htmlFor="passwordConfirm"
-                      className="form-label fw-semibold mb-2"
-                    >
-                      {translate('signup.passwordConfirm')}
+                    <label htmlFor="passwordConfirm" className="form-label fw-semibold mb-2">
+                      {t('signup.passwordConfirm')}
                     </label>
                     <Field
                       id="passwordConfirm"
                       name="passwordConfirm"
                       type="password"
                       className={`form-control form-control-lg ${
-                        touched.passwordConfirm && errors.passwordConfirm
-                          ? 'is-invalid'
-                          : ''
+                        touched.passwordConfirm && errors.passwordConfirm ? 'is-invalid' : ''
                       }`}
                       autoComplete="new-password"
                       disabled={isSubmitting}
                     />
                     {touched.passwordConfirm && errors.passwordConfirm && (
-                      <div className="invalid-feedback">
-                        {errors.passwordConfirm}
-                      </div>
+                      <div className="invalid-feedback">{errors.passwordConfirm}</div>
                     )}
                   </div>
 
@@ -155,20 +137,15 @@ function SignupPage() {
                     className="btn btn-primary w-100 py-3 fw-semibold btn-lg"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting
-                      ? translate('signup.creating')
-                      : translate('signup.submit')}
+                    {isSubmitting ? t('signup.creating') : t('signup.submit')}
                   </button>
                 </Form>
               )}
             </Formik>
 
             <div className="text-center mt-4 pt-3 border-top">
-              <Link
-                to="/login"
-                className="text-muted text-decoration-none fw-semibold"
-              >
-                {translate('signup.loginLink')}
+              <Link to="/login" className="text-muted text-decoration-none fw-semibold">
+                {t('signup.loginLink')}
               </Link>
             </div>
           </div>

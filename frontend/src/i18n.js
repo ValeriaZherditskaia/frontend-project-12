@@ -69,6 +69,11 @@ const resources = {
         newMessage: 'Новое сообщение',
         send: 'Отправить',
         enterMessage: 'Введите сообщение...',
+        messagesCount_zero: '{{count}} сообщений',
+        messagesCount_one: '{{count}} сообщение',
+        messagesCount_few: '{{count}} сообщения',
+        messagesCount_many: '{{count}} сообщений',
+        messagesCount_other: '{{count}} сообщений',
       },
       modals: {
         add: 'Добавить канал',
@@ -99,6 +104,14 @@ const resources = {
         network: {
           connected: 'Сеть восстановлена',
         },
+        socket: {
+        connected: 'Подключено к чату',
+        disconnected: 'Соединение с сервером потеряно',
+      }
+      },
+      notFound: {
+        message: 'Страница не найдена',
+        home: 'На главную',
       },
     },
   },

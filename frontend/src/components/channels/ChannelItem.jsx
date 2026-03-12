@@ -41,7 +41,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
         className={buttonClasses}
         style={buttonStyle}
         onClick={() => onChannelClick(channel.id)}
-        aria-label={channel.name} // ← добавлено
+        aria-label={channel.name} // ← добавлено для точного совпадения в тестах
       >
         {content}
       </button>
@@ -57,7 +57,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
         }`}
         style={buttonStyle}
         onClick={() => onChannelClick(channel.id)}
-        aria-label={channel.name} // ← добавлено
+        aria-label={channel.name} // ← добавлено для точного совпадения в тестах
       >
         {content}
       </button>

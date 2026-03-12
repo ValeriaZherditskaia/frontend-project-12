@@ -38,11 +38,13 @@ function ChannelModal() {
   };
 
   const handleAdd = async (name) => {
+    console.log('📤 Sending channel name to server:', name);
     try {
-      await dispatch(createChannel(name)).unwrap();
+      const result = await dispatch(createChannel(name)).unwrap();
+      console.log('📥 Channel created, received from server:', result);
       handleClose();
     } catch (err) {
-      console.error('Add error:', err);
+      console.error('❌ Add error:', err);
     }
   };
 

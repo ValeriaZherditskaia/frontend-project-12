@@ -119,6 +119,7 @@ const channelsSlice = createSlice({
       // createChannel
       .addCase(createChannel.pending, handlePending)
       .addCase(createChannel.fulfilled, (state, action) => {
+        console.log('✅ createChannel.fulfilled payload:', action.payload);
         handleFulfilled(state, action, { addEntity: true, setCurrentChannel: true });
       })
       .addCase(createChannel.rejected, handleRejected)

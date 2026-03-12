@@ -1,5 +1,3 @@
-// Форма переименования
-
 import { Form, FormControl } from 'react-bootstrap';
 import { Formik, Field, Form as FormikForm } from 'formik';
 import Profanity from 'leo-profanity';
@@ -54,6 +52,9 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
       {({ isSubmitting, errors, handleSubmit: formikSubmit }) => (
         <FormikForm noValidate onSubmit={formikSubmit}>
           <Form.Group className="mb-3">
+            <Form.Label htmlFor="channelName">
+              {t('modals.channelNamePlaceholder', 'Имя канала')}
+            </Form.Label>
             <Field
               id="channelName"
               name="name"
@@ -72,7 +73,7 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
 
           <ModalButtons
             onCancel={onCancel}
-            onConfirm={formikSubmit}  // ← передаём функцию отправки формы
+            onConfirm={formikSubmit}
             confirmText={t('modals.save')}
             isLoading={isLoading || isSubmitting}
           />

@@ -14,14 +14,12 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
   const handleSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
     const name = values.name.trim();
 
-    // Проверка на пустое имя (хотя schema это тоже проверит)
     if (!name) {
       setFieldError('name', t('validation.required', 'Обязательное поле'));
       setSubmitting(false);
       return;
     }
 
-    // Проверка на уникальность
     if (existingNames.includes(name)) {
       setFieldError('name', t('modals.unique', 'Должно быть уникальным'));
       setSubmitting(false);
@@ -51,6 +49,9 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
       {({ isSubmitting, errors, handleSubmit: formikSubmit }) => (
         <FormikForm noValidate onSubmit={formikSubmit}>
           <Form.Group className="mb-3">
+            <Form.Label htmlFor="channelName">
+              {t('modals.channelNamePlaceholder', 'Имя канала')}
+            </Form.Label>
             <Field
               id="channelName"
               name="name"

@@ -26,11 +26,11 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
       return;
     }
 
-    if (Profanity.check(name)) {
-      setFieldError('name', t('notifications.error.profanity'));
-      setSubmitting(false);
-      return;
-    }
+    // if (Profanity.check(name)) {
+      // setFieldError('name', t('notifications.error.profanity'));
+      // setSubmitting(false);
+      // return;
+    // }
 
     await onSubmit(name);
     resetForm();

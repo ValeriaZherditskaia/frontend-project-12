@@ -1,5 +1,6 @@
 import { Form, FormControl } from 'react-bootstrap';
 import { Formik, Field, Form as FormikForm } from 'formik';
+import Profanity from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { CHANNEL_SCHEMA } from '../../slices/validationSchemas.js';
@@ -11,21 +12,24 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
   const existingNames = channels.map(c => c.name);
 
   const handleSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
-    const name = values.name.trim();
+    const rawName = values.name.trim();
 
-    if (!name) {
-      setFieldError('name', t('validation.required', 'Обязательное поле'));
+    if (!rawName) {
+      setFieldError('name', t('validation.required'));
       setSubmitting(false);
       return;
     }
 
-    if (existingNames.includes(name)) {
-      setFieldError('name', t('modals.unique', 'Должно быть уникальным'));
+    if (existingNames.includes(rawName)) {
+      setFieldError('name', t('modals.unique'));
       setSubmitting(false);
       return;
     }
 
-    await onSubmit(name);
+    // Очищаем название от нецензурных слов
+    const cleanedName = Profanity.clean(rawName);
+
+    await onSubmit(cleanedName);
     resetForm();
     setSubmitting(false);
   };
@@ -43,7 +47,7 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
         <FormikForm noValidate onSubmit={formikSubmit}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="channelName">
-              {t('modals.channelNamePlaceholder', 'Имя канала')}
+              {t('modals.channelNamePlaceholder')}
             </Form.Label>
             <Field
               id="channelName"
@@ -51,7 +55,7 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
               as={Form.Control}
               autoFocus
               disabled={isLoading || isSubmitting}
-              placeholder={t('modals.channelNamePlaceholder', 'Имя канала')}
+              placeholder={t('modals.channelNamePlaceholder')}
               isInvalid={errors.name}
             />
             {errors.name && (

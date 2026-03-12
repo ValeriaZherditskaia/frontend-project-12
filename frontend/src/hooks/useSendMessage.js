@@ -1,5 +1,3 @@
-// Хук для отправки сообщений
-
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -8,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 const API_URL = '/api/v1/messages';
-const MAX_MESSAGE_LENGTH = 500;
 
 const useSendMessage = () => {
   const { t } = useTranslation();
@@ -18,7 +15,7 @@ const useSendMessage = () => {
     (state) => state.channels
   );
   
-  const username = localStorage.getItem('username') || t('app.guest', 'Гость');
+  const username = localStorage.getItem('username') || t('app.guest');
   const token = localStorage.getItem('token');
 
   const sendMessage = useCallback(
@@ -26,17 +23,15 @@ const useSendMessage = () => {
       const trimmedText = text.trim();
       if (!trimmedText || !activeChannelId) return false;
 
-      if (Profanity.check(trimmedText)) {
-        toast.error(t('notifications.error.profanity'));
-        return false;
-      }
+      // Очищаем текст от нецензурных слов
+      const cleanedText = Profanity.clean(trimmedText);
 
       try {
         setSending(true);
         await axios.post(
           API_URL,
           {
-            text: trimmedText,
+            text: cleanedText,
             channelId: activeChannelId,
             username,
           },

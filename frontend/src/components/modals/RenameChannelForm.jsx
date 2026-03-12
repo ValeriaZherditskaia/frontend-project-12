@@ -14,27 +14,24 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
     .map(c => c.name);
 
   const handleSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
-    const name = values.name.trim();
+    const rawName = values.name.trim();
 
-    if (!name) {
-      setFieldError('name', t('validation.required', 'Обязательное поле'));
+    if (!rawName) {
+      setFieldError('name', t('validation.required'));
       setSubmitting(false);
       return;
     }
 
-    if (existingNames.includes(name)) {
-      setFieldError('name', t('modals.unique', 'Должно быть уникальным'));
+    if (existingNames.includes(rawName)) {
+      setFieldError('name', t('modals.unique'));
       setSubmitting(false);
       return;
     }
 
-    if (Profanity.check(name)) {
-      setFieldError('name', t('notifications.error.profanity'));
-      setSubmitting(false);
-      return;
-    }
+    // Очищаем название от нецензурных слов
+    const cleanedName = Profanity.clean(rawName);
 
-    await onSubmit(name);
+    await onSubmit(cleanedName);
     resetForm();
     setSubmitting(false);
   };
@@ -53,7 +50,7 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
         <FormikForm noValidate onSubmit={formikSubmit}>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="channelName">
-              {t('modals.channelNamePlaceholder', 'Имя канала')}
+              {t('modals.channelNamePlaceholder')}
             </Form.Label>
             <Field
               id="channelName"
@@ -61,7 +58,7 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
               as={Form.Control}
               autoFocus
               disabled={isLoading || isSubmitting}
-              placeholder={t('modals.channelNamePlaceholder', 'Имя канала')}
+              placeholder={t('modals.channelNamePlaceholder')}
               isInvalid={errors.name}
             />
             {errors.name && (

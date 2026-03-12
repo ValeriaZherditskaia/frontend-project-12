@@ -57,7 +57,7 @@ const resources = {
       channels: {
         title: 'Каналы',
         new: 'Новый канал',
-        remove: 'Удалить канал',
+        remove: 'Удалить',
         rename: 'Переименовать',
         confirmRemove: 'Уверены?',
         removed: 'Канал удалён',
@@ -77,14 +77,16 @@ const resources = {
       },
       modals: {
         add: 'Добавить канал',
-        errors: {
-          required: 'Обязательное для заполнения',
-          unique: 'Должно быть уникальным',
-          min: 'Не менее 3 символов',
-          max: 'Не более 20 символов',
-        },
-        submit: 'Отправить',
+        rename: 'Переименовать канал',
+        remove: 'Удалить',
         cancel: 'Отменить',
+        save: 'Сохранить',
+        saving: 'Сохранение...',
+        deleting: 'Удаление...',
+        channelNamePlaceholder: 'Имя канала',
+        unique: 'Должно быть уникальным',
+        confirmDelete: 'Уверены?',
+        deleteWarning: 'Все сообщения будут удалены.',
       },
       notifications: {
         channels: {

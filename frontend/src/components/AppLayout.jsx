@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { fetchMessages, addMessage } from '../slices/uiSlice.js';
 import { fetchChannels } from '../slices/channelsSlice.js';
 import { initSocket, setConnected } from '../slices/socketSlice.js';
-import ChannelsList from './ChannelsList.jsx';
+import ChannelsList from './channels/ChannelsList.jsx';
 import ChatHeader from './ChatHeader.jsx';
 import MessagesList from './MessagesList.jsx';
 import MessageForm from './MessageForm.jsx';
-import ChannelModal from './ChannelModal.jsx'
+import ChannelModal from './modals/ChannelModal.jsx';
 
 function AppLayout() {
   const dispatch = useDispatch();

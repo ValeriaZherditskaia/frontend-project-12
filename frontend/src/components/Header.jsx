@@ -6,6 +6,17 @@ function Header() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    if (token) {
+      // Если авторизован - перезагружаем главную
+      window.location.href = '/';
+    } else {
+      // Если не авторизован - идём на логин
+      navigate('/login');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
@@ -14,7 +25,11 @@ function Header() {
 
   return (
     <header className="app-header">
-      <Link to="/" className="h4 mb-0 text-decoration-none text-dark">
+      <Link 
+        to="/" 
+        className="h4 mb-0 text-decoration-none text-dark"
+        onClick={handleLogoClick}
+      >
         {t('app.name')}
       </Link>
       {token && (

@@ -59,7 +59,6 @@ function LoginPage() {
                       </div>
                     )}
 
-                    {/* Поле Имя пользователя с floating label */}
                     <div className="form-floating mb-4">
                       <Field
                         id="username"
@@ -79,7 +78,6 @@ function LoginPage() {
                       )}
                     </div>
 
-                    {/* Поле Пароль с floating label */}
                     <div className="form-floating mb-4">
                       <Field
                         id="password"

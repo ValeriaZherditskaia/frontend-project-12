@@ -56,12 +56,14 @@ const resources = {
       },
       channels: {
         title: 'Каналы',
-        new: 'Новый канал',
+        new: '+',
+        add: '+',
         remove: 'Удалить',
         rename: 'Переименовать',
         confirmRemove: 'Уверены?',
         removed: 'Канал удалён',
         renamed: 'Канал переименован',
+        created: 'Канал создан',
         general: 'general',
       },
       chat: {
@@ -78,7 +80,7 @@ const resources = {
       modals: {
         add: 'Добавить канал',
         rename: 'Переименовать канал',
-        remove: 'Удалить',
+        remove: 'Удалить канал',
         cancel: 'Отменить',
         save: 'Сохранить',
         saving: 'Сохранение...',
@@ -98,7 +100,7 @@ const resources = {
           added: 'Сообщение добавлено',
         },
         error: {
-          network: 'Нет сети. Подключитесь и обновите страницу',
+          network: 'Ошибка соединения',
           loadData: 'Ошибка загрузки данных',
           server: 'Ошибка сервера',
           profanity: 'Нецензурные слова запрещены',
@@ -107,9 +109,9 @@ const resources = {
           connected: 'Сеть восстановлена',
         },
         socket: {
-        connected: 'Подключено к чату',
-        disconnected: 'Соединение с сервером потеряно',
-      }
+          connected: 'Подключено к чату',
+          disconnected: 'Соединение с сервером потеряно',
+        }
       },
       notFound: {
         message: 'Страница не найдена',
@@ -126,7 +128,7 @@ i18n
     lng: 'ru',
     fallbackLng: 'ru',
     interpolation: {
-      escapeValue: false, // React сам экранирует
+      escapeValue: false,
     },
   });
 

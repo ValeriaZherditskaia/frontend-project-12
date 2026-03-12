@@ -75,7 +75,6 @@ function SignupPage() {
                 >
                   {({ isSubmitting, errors, touched, submitCount }) => (
                     <Form noValidate>
-                      {/* Поле Имя пользователя с floating label */}
                       <div className="form-floating mb-4">
                         <Field
                           id="username"
@@ -95,7 +94,6 @@ function SignupPage() {
                         )}
                       </div>
 
-                      {/* Поле Пароль с floating label */}
                       <div className="form-floating mb-4">
                         <Field
                           id="password"
@@ -114,7 +112,6 @@ function SignupPage() {
                         )}
                       </div>
 
-                      {/* Поле Подтверждение пароля с floating label */}
                       <div className="form-floating mb-4">
                         <Field
                           id="passwordConfirm"

@@ -1,5 +1,3 @@
-// Один канал (с дропдауном)
-
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -43,6 +41,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
         className={buttonClasses}
         style={buttonStyle}
         onClick={() => onChannelClick(channel.id)}
+        aria-label={channel.name} // ← добавлено
       >
         {content}
       </button>
@@ -58,6 +57,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
         }`}
         style={buttonStyle}
         onClick={() => onChannelClick(channel.id)}
+        aria-label={channel.name} // ← добавлено
       >
         {content}
       </button>
@@ -72,7 +72,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
             color: isActive ? 'white' : '#495057',
           }}
         >
-          <span className="visually-hidden">{t('channels.title')}</span>
+          <span className="visually-hidden">{t('channels.management')}</span>
         </Dropdown.Toggle>
 
         <Dropdown.Menu>

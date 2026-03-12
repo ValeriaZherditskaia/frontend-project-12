@@ -1,6 +1,5 @@
 import { Form, FormControl } from 'react-bootstrap';
 import { Formik, Field, Form as FormikForm } from 'formik';
-import Profanity from 'leo-profanity';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { CHANNEL_SCHEMA } from '../../slices/validationSchemas.js';
@@ -25,12 +24,6 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
       setSubmitting(false);
       return;
     }
-
-    // if (Profanity.check(name)) {
-      // setFieldError('name', t('notifications.error.profanity'));
-      // setSubmitting(false);
-      // return;
-    // }
 
     await onSubmit(name);
     resetForm();

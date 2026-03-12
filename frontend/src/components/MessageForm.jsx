@@ -10,7 +10,7 @@ function MessageForm() {
   const [messageText, setMessageText] = useState('');
   const { sendMessage, sending } = useSendMessage();
   
-  const textareaRef = useAutoResize(messageText); // этот реф и для фокуса используем
+  const textareaRef = useAutoResize(messageText);
 
   const handleChange = useCallback((e) => {
     setMessageText(e.target.value);
@@ -22,7 +22,6 @@ function MessageForm() {
       const success = await sendMessage(messageText);
       if (success) {
         setMessageText('');
-        // Используем тот же реф для фокуса
         setTimeout(() => textareaRef.current?.focus(), 0);
       }
     },
@@ -52,6 +51,7 @@ function MessageForm() {
             onKeyDown={handleKeyDown}
             disabled={sending}
             placeholder={t('chat.enterMessage')}
+            aria-label={t('chat.newMessage')}
           />
           <button
             type="submit"

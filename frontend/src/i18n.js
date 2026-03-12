@@ -35,7 +35,7 @@ const resources = {
         passwordConfirmPlaceholder: 'Подтвердите пароль',
         submit: 'Зарегистрироваться',
         creating: 'Создание аккаунта...',
-        userExists: 'Пользователь с таким именем уже существует',
+        userExists: 'Такой пользователь уже существует',
         serverError: 'Ошибка сервера. Попробуйте позже',
         validation: {
           username: {

@@ -32,7 +32,7 @@ const resources = {
         title: 'Регистрация',
         usernamePlaceholder: 'Имя пользователя',
         passwordPlaceholder: 'Пароль',
-        passwordConfirmPlaceholder: 'Подтверждение пароля',
+        passwordConfirmPlaceholder: 'Подтвердите пароль',
         submit: 'Зарегистрироваться',
         creating: 'Создание аккаунта...',
         userExists: 'Пользователь с таким именем уже существует',

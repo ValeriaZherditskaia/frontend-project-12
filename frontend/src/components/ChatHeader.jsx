@@ -10,13 +10,15 @@ function ChatHeader() {
   const count = messages.filter((msg) => msg.channelId === currentChannelId).length;
 
   return (
-    <header className="p-3 border-bottom" style={{ background: '#f8f9fa' }}>
-      <h1 className="h5 mb-0 fw-normal" style={{ color: '#212529' }}>
-        # {currentChannel?.name}
-      </h1>
-      <span className="small text-secondary d-block m-0">
-        {t('chat.messagesCount', { count })}
-      </span>
+    <header className="p-3 border-bottom d-flex justify-content-between align-items-center" style={{ background: '#f8f9fa' }}>
+      <div>
+        <h1 className="h5 mb-0 fw-normal" style={{ color: '#212529' }}>
+          # {currentChannel?.name}
+        </h1>
+        <span className="small text-secondary d-block m-0">
+          {t('chat.messagesCount', { count })}
+        </span>
+      </div>
     </header>
   );
 }

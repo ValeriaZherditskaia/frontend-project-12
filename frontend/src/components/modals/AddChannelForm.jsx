@@ -69,7 +69,7 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
 
           <ModalButtons
             onCancel={onCancel}
-            onConfirm={formikSubmit}  // ← передаём функцию отправки формы
+            onConfirm={formikSubmit}
             confirmText={t('modals.add')}
             isLoading={isLoading || isSubmitting}
           />

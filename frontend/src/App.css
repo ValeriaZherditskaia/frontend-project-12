@@ -1,5 +1,7 @@
 /* Hexlet Chat Demo */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 #root {
   display: flex;
@@ -18,28 +20,32 @@
   flex-shrink: 0;
 }
 
-/* Основной контейнер чата */
-.chat-container {
-  flex: 1;
-  padding: 1rem;
-  background: #f8f9fa;
-  height: calc(100vh - 56px);
-  overflow: hidden;
-}
-
-/* Карточка чата */
+/* Общие стили для карточек (используются и в чате, и на страницах входа/регистрации) */
 .card {
-  height: 100%;
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
   overflow: hidden;
   border: 1px solid #dee2e6 !important;
 }
 
-.card-body {
+/* Стили только для карточки внутри чата */
+.chat-container .card {
+  height: 100%;
+}
+
+.chat-container .card-body {
   display: flex;
   padding: 0 !important;
   height: 100%;
+  overflow: hidden;
+}
+
+/* Основной контейнер чата */
+.chat-container {
+  flex: 1;
+  padding: 1rem;
+  background: #f8f9fa;
+  height: calc(100vh - 56px);
   overflow: hidden;
 }
 
@@ -59,7 +65,6 @@
   height: 56px;
   min-height: 56px;
   background: #f8f9fa !important;
-  border-bottom: 1px solid #dee2e6;
   padding: 0 1rem !important;
 }
 
@@ -75,7 +80,7 @@
   width: 28px !important;
   height: 28px !important;
   background-color: #f8f9fa !important;
-  border: 2px solid #0d6efd !important;
+  border: 1px solid #0d6efd !important;
   color: #0d6efd !important;
   border-radius: 4px !important;
   display: flex !important;
@@ -151,7 +156,6 @@
 .message-form-container {
   height: 70px;
   min-height: 70px;
-  border-top: 1px solid #dee2e6;
   background: #ffffff;
   display: flex;
   align-items: center;
@@ -207,8 +211,11 @@
 
 /* ===== КНОПКИ КАНАЛОВ И ДРОПДАУН (ЕДИНАЯ ВЫСОТА 28px) ===== */
 
-/* Общие стили для кнопок каналов (и обычных, и с дропдауном) */
-.channels-panel .btn-sm {
+/* Базовые стили для всех кнопок в панели каналов (кроме btn-add-channel) */
+.channels-panel .btn-sm,
+.channels-panel .btn-dark,
+.channels-panel .btn-light,
+.channels-panel .dropdown-toggle {
   height: 28px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -219,22 +226,13 @@
   justify-content: center !important;
 }
 
-/* Кнопки каналов (левая часть) – убираем лишние паддинги, оставляем только горизонтальные */
+/* Кнопки каналов (левая часть) – растягиваются по ширине */
 .channels-panel .btn-sm.px-3 {
   padding-left: 0.75rem !important;
   padding-right: 0.75rem !important;
 }
 
-/* Специально для кнопок в списке каналов, чтобы они не растягивались по высоте и не имели границ */
-.channels-panel button[class*="btn-"] {
-  height: 28px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  line-height: 28px !important;
-  border: none !important; /* Убираем все границы у кнопок каналов */
-}
-
-/* Кнопки каналов (активные/неактивные) – фон и цвет */
+/* Кнопки каналов (активные/неактивные) */
 .channels-panel .btn-dark {
   background-color: #495057 !important;
   border-color: #495057 !important;
@@ -252,16 +250,10 @@
   background-color: #e9ecef !important;
 }
 
-/* Дропдаун – кнопка с троеточием */
+/* Дропдаун – кнопка с троеточием (специфичные размеры) */
 .channels-panel .dropdown-toggle {
   width: 28px !important;
-  height: 28px !important;
   padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 1.2rem !important;
-  line-height: 1 !important;
   background-color: transparent;
   border: none !important;
 }
@@ -320,4 +312,33 @@ body {
 /* Отступ снизу формы */
 .chat-main form {
   margin-bottom: 1rem;
+}
+
+/* Форма внутри контейнера сообщений */
+.message-form-container form {
+  width: 100%;
+}
+
+/* Группа ввода занимает всю ширину формы */
+.message-form-container .input-group {
+  width: 100%;
+}
+
+/* Текстовое поле растягивается */
+.message-form-container textarea {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  width: auto !important;
+}
+
+/* Кнопка сохраняет фиксированную ширину */
+.message-form-container .btn-primary {
+  flex: 0 0 auto;
+  width: 38px;
+  margin-right: 0;
+}
+
+/* Уменьшаем шрифт в крупных полях до стандартного размера */
+.form-control-lg {
+  font-size: 1rem !important;
 }

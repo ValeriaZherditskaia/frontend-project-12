@@ -16,103 +16,108 @@ function LoginPage() {
   });
 
   return (
-    <div className="h-100 bg-light d-flex align-items-center justify-content-center py-4">
-      <div className="w-100" style={{ maxWidth: '500px', minWidth: '320px' }}>
-        <div className="card shadow-lg border-0">
-          <div className="card-body p-5">
-            <h2 className="h4 fw-normal mb-4 text-center text-dark">
-              {t('login.title')}
-            </h2>
+    <div className="container-fluid h-100">
+      <div className="row justify-content-center align-content-center h-100">
+        <div className="col-12 col-md-8 col-xxl-6">
+          <div className="card shadow-sm">
+            <div className="card-body p-5">
+              <h2 className="h4 fw-normal mb-4 text-center text-dark">
+                {t('login.title')}
+              </h2>
 
-            <Formik
-              initialValues={{ username: '', password: '' }}
-              validationSchema={validationSchema}
-              onSubmit={async (values, { setSubmitting }) => {
-                try {
-                  setError('');
-                  const response = await axios.post('/api/v1/login', {
-                    username: values.username,
-                    password: values.password,
-                  });
-                  
-                  localStorage.setItem('token', response.data.token);
-                  localStorage.setItem('username', response.data.username);
-                  
-                  navigate('/');
-                } catch (err) {
-                  setError(t('login.error'));
-                  console.error('Login error:', err.response?.data);
-                } finally {
-                  setSubmitting(false);
-                }
-              }}
-            >
-              {({ isSubmitting, errors, touched }) => (
-                <Form noValidate>
-                  {error && (
-                    <div className="alert alert-danger mb-4" role="alert">
-                      {error}
+              <Formik
+                initialValues={{ username: '', password: '' }}
+                validationSchema={validationSchema}
+                validateOnMount={false}
+                validateOnBlur={true}
+                validateOnChange={false}
+                onSubmit={async (values, { setSubmitting }) => {
+                  try {
+                    setError('');
+                    const response = await axios.post('/api/v1/login', {
+                      username: values.username,
+                      password: values.password,
+                    });
+                    
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('username', response.data.username);
+                    
+                    navigate('/');
+                  } catch (err) {
+                    setError(t('login.error'));
+                    console.error('Login error:', err.response?.data);
+                  } finally {
+                    setSubmitting(false);
+                  }
+                }}
+              >
+                {({ isSubmitting, errors, touched, submitCount }) => (
+                  <Form noValidate>
+                    {error && (
+                      <div className="alert alert-danger mb-4" role="alert">
+                        {error}
+                      </div>
+                    )}
+
+                    {/* Поле Имя пользователя с floating label */}
+                    <div className="form-floating mb-4">
+                      <Field
+                        id="username"
+                        name="username"
+                        type="text"
+                        className={`form-control ${
+                          ((touched.username && errors.username) || (submitCount > 0 && errors.username)) ? 'is-invalid' : ''
+                        }`}
+                        placeholder=" "
+                        autoComplete="username"
+                        autoFocus
+                        disabled={isSubmitting}
+                      />
+                      <label htmlFor="username">{t('login.usernamePlaceholder')}</label>
+                      {((touched.username && errors.username) || (submitCount > 0 && errors.username)) && (
+                        <div className="invalid-feedback">{errors.username}</div>
+                      )}
                     </div>
-                  )}
 
-                  <div className="mb-4">
-                    <label htmlFor="username" className="form-label fw-semibold mb-2">
-                      {t('login.username')}
-                    </label>
-                    <Field
-                      id="username"
-                      name="username"
-                      type="text"
-                      className={`form-control form-control-lg ${
-                        touched.username && errors.username ? 'is-invalid' : ''
-                      }`}
-                      placeholder="admin"
-                      autoComplete="username"
-                      autoFocus
+                    {/* Поле Пароль с floating label */}
+                    <div className="form-floating mb-4">
+                      <Field
+                        id="password"
+                        name="password"
+                        type="password"
+                        className={`form-control ${
+                          ((touched.password && errors.password) || (submitCount > 0 && errors.password)) ? 'is-invalid' : ''
+                        }`}
+                        placeholder=" "
+                        autoComplete="current-password"
+                        disabled={isSubmitting}
+                      />
+                      <label htmlFor="password">{t('login.passwordPlaceholder')}</label>
+                      {((touched.password && errors.password) || (submitCount > 0 && errors.password)) && (
+                        <div className="invalid-feedback">{errors.password}</div>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="btn btn-outline-primary w-100 py-3 fw-semibold btn-lg"
                       disabled={isSubmitting}
-                    />
-                    {touched.username && errors.username && (
-                      <div className="invalid-feedback">{errors.username}</div>
-                    )}
-                  </div>
+                    >
+                      {isSubmitting ? `${t('login.submit')}...` : t('login.submit')}
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
 
-                  <div className="mb-4">
-                    <label htmlFor="password" className="form-label fw-semibold mb-2">
-                      {t('login.password')}
-                    </label>
-                    <Field
-                      id="password"
-                      name="password"
-                      type="password"
-                      className={`form-control form-control-lg ${
-                        touched.password && errors.password ? 'is-invalid' : ''
-                      }`}
-                      placeholder="admin"
-                      autoComplete="current-password"
-                      disabled={isSubmitting}
-                    />
-                    {touched.password && errors.password && (
-                      <div className="invalid-feedback">{errors.password}</div>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 py-3 fw-semibold btn-lg"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? `${t('login.submit')}...` : t('login.submit')}
-                  </button>
-
-                  <div className="text-center mt-4 pt-3 border-top">
-                    <Link to="/signup" className="text-muted text-decoration-none fw-semibold">
-                      <i className="bi bi-person-plus me-1" />
-                      {t('login.signupLink')}
-                    </Link>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+            <div className="card-footer p-4 bg-light">
+              <div className="text-center">
+                <span className="text-muted">{t('login.noAccount')} </span>
+                <Link to="/signup" className="text-primary text-decoration-none fw-semibold">
+                  {t('login.signupLink')}
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

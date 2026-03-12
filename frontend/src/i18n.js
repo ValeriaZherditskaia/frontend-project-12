@@ -9,16 +9,17 @@ const resources = {
         logout: 'Выйти',
       },
       login: {
-        title: 'Вход',
-        username: 'Имя пользователя',
-        password: 'Пароль',
+        title: 'Войти',
+        usernamePlaceholder: 'Ваш ник',
+        passwordPlaceholder: 'Пароль',
         submit: 'Войти',
-        signupLink: 'Нет аккаунта? Зарегистрироваться',
+        noAccount: 'Нет аккаунта?',
+        signupLink: 'Регистрация',
         error: 'Неверное имя пользователя или пароль',
         loggingIn: 'Вход...',
         validation: {
           username: {
-            required: 'Имя пользователя обязательно',
+            required: 'Ник обязателен',
             min: 'От 3 символов',
           },
           password: {
@@ -29,14 +30,13 @@ const resources = {
       },
       signup: {
         title: 'Регистрация',
-        username: 'Имя пользователя',
-        password: 'Пароль',
-        passwordConfirm: 'Подтверждение пароля',
+        usernamePlaceholder: 'Имя пользователя',
+        passwordPlaceholder: 'Пароль',
+        passwordConfirmPlaceholder: 'Подтверждение пароля',
         submit: 'Зарегистрироваться',
-        loginLink: 'Уже есть аккаунт? Войти',
+        creating: 'Создание аккаунта...',
         userExists: 'Пользователь с таким именем уже существует',
         serverError: 'Ошибка сервера. Попробуйте позже',
-        creating: 'Создание аккаунта...',
         validation: {
           username: {
             min: 'От 3 до 20 символов',

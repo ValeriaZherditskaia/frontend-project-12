@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -49,104 +49,101 @@ function SignupPage() {
   };
 
   return (
-    <div className="h-100 bg-light d-flex align-items-center justify-content-center py-4">
-      <div className="w-100" style={{ maxWidth: '500px', minWidth: '320px' }}>
-        <div className="card shadow-lg border-0">
-          <div className="card-body p-5">
-            <h2 className="h4 fw-normal mb-4 text-center text-dark">
-              {t('signup.title')}
-            </h2>
+    <div className="bg-light h-100 d-flex align-items-center justify-content-center">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-6 col-lg-4">
+            <div className="card shadow-sm">
+              <div className="card-body p-5">
+                <h2 className="h4 fw-normal mb-4 text-center text-dark">
+                  {t('signup.title')}
+                </h2>
 
-            {serverError && (
-              <div className="alert alert-danger mb-4" role="alert">
-                {serverError}
+                {serverError && (
+                  <div className="alert alert-danger mb-4" role="alert">
+                    {serverError}
+                  </div>
+                )}
+
+                <Formik
+                  initialValues={{ username: '', password: '', passwordConfirm: '' }}
+                  validationSchema={validationSchema}
+                  validateOnMount={false}
+                  validateOnBlur={true}
+                  validateOnChange={false}
+                  onSubmit={handleSubmit}
+                >
+                  {({ isSubmitting, errors, touched, submitCount }) => (
+                    <Form noValidate>
+                      {/* Поле Имя пользователя с floating label */}
+                      <div className="form-floating mb-4">
+                        <Field
+                          id="username"
+                          name="username"
+                          type="text"
+                          className={`form-control ${
+                            ((touched.username && errors.username) || (submitCount > 0 && errors.username)) ? 'is-invalid' : ''
+                          }`}
+                          placeholder=" "
+                          autoComplete="username"
+                          autoFocus
+                          disabled={isSubmitting}
+                        />
+                        <label htmlFor="username">{t('signup.usernamePlaceholder')}</label>
+                        {((touched.username && errors.username) || (submitCount > 0 && errors.username)) && (
+                          <div className="invalid-feedback">{errors.username}</div>
+                        )}
+                      </div>
+
+                      {/* Поле Пароль с floating label */}
+                      <div className="form-floating mb-4">
+                        <Field
+                          id="password"
+                          name="password"
+                          type="password"
+                          className={`form-control ${
+                            ((touched.password && errors.password) || (submitCount > 0 && errors.password)) ? 'is-invalid' : ''
+                          }`}
+                          placeholder=" "
+                          autoComplete="new-password"
+                          disabled={isSubmitting}
+                        />
+                        <label htmlFor="password">{t('signup.passwordPlaceholder')}</label>
+                        {((touched.password && errors.password) || (submitCount > 0 && errors.password)) && (
+                          <div className="invalid-feedback">{errors.password}</div>
+                        )}
+                      </div>
+
+                      {/* Поле Подтверждение пароля с floating label */}
+                      <div className="form-floating mb-4">
+                        <Field
+                          id="passwordConfirm"
+                          name="passwordConfirm"
+                          type="password"
+                          className={`form-control ${
+                            ((touched.passwordConfirm && errors.passwordConfirm) || (submitCount > 0 && errors.passwordConfirm)) ? 'is-invalid' : ''
+                          }`}
+                          placeholder=" "
+                          autoComplete="new-password"
+                          disabled={isSubmitting}
+                        />
+                        <label htmlFor="passwordConfirm">{t('signup.passwordConfirmPlaceholder')}</label>
+                        {((touched.passwordConfirm && errors.passwordConfirm) || (submitCount > 0 && errors.passwordConfirm)) && (
+                          <div className="invalid-feedback">{errors.passwordConfirm}</div>
+                        )}
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="btn btn-outline-primary w-100 py-3 fw-semibold btn-lg"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? t('signup.creating') : t('signup.submit')}
+                      </button>
+                    </Form>
+                  )}
+                </Formik>
               </div>
-            )}
-
-            <Formik
-              initialValues={{
-                username: '',
-                password: '',
-                passwordConfirm: '',
-              }}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
-              {({ isSubmitting, errors, touched }) => (
-                <Form noValidate>
-                  <div className="mb-4">
-                    <label htmlFor="username" className="form-label fw-semibold mb-2">
-                      {t('signup.username')}
-                    </label>
-                    <Field
-                      id="username"
-                      name="username"
-                      type="text"
-                      className={`form-control form-control-lg ${
-                        touched.username && errors.username ? 'is-invalid' : ''
-                      }`}
-                      autoComplete="username"
-                      autoFocus
-                      disabled={isSubmitting}
-                    />
-                    {touched.username && errors.username && (
-                      <div className="invalid-feedback">{errors.username}</div>
-                    )}
-                  </div>
-
-                  <div className="mb-4">
-                    <label htmlFor="password" className="form-label fw-semibold mb-2">
-                      {t('signup.password')}
-                    </label>
-                    <Field
-                      id="password"
-                      name="password"
-                      type="password"
-                      className={`form-control form-control-lg ${
-                        touched.password && errors.password ? 'is-invalid' : ''
-                      }`}
-                      autoComplete="new-password"
-                      disabled={isSubmitting}
-                    />
-                    {touched.password && errors.password && (
-                      <div className="invalid-feedback">{errors.password}</div>
-                    )}
-                  </div>
-
-                  <div className="mb-4">
-                    <label htmlFor="passwordConfirm" className="form-label fw-semibold mb-2">
-                      {t('signup.passwordConfirm')}
-                    </label>
-                    <Field
-                      id="passwordConfirm"
-                      name="passwordConfirm"
-                      type="password"
-                      className={`form-control form-control-lg ${
-                        touched.passwordConfirm && errors.passwordConfirm ? 'is-invalid' : ''
-                      }`}
-                      autoComplete="new-password"
-                      disabled={isSubmitting}
-                    />
-                    {touched.passwordConfirm && errors.passwordConfirm && (
-                      <div className="invalid-feedback">{errors.passwordConfirm}</div>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 py-3 fw-semibold btn-lg"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? t('signup.creating') : t('signup.submit')}
-                  </button>
-                </Form>
-              )}
-            </Formik>
-
-            <div className="text-center mt-4 pt-3 border-top">
-              <Link to="/login" className="text-muted text-decoration-none fw-semibold">
-                {t('signup.loginLink')}
-              </Link>
             </div>
           </div>
         </div>

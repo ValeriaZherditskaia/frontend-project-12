@@ -21,7 +21,7 @@ function ChannelsList() {
   return (
     <div className="h-100 d-flex flex-column">
       {/* Заголовок панели каналов */}
-      <div className="d-flex align-items-center p-3 border-bottom" style={{ backgroundColor: '#f8f9fa' }}>
+      <div className="d-flex align-items-center p-3" style={{ backgroundColor: '#f8f9fa' }}>
         <h6 className="mb-0 fw-bold flex-grow-1 text-start" style={{ color: '#212529' }}>
           {t('channels.title')}
         </h6>

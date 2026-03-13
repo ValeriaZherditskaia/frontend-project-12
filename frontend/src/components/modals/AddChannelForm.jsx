@@ -26,15 +26,10 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
       return;
     }
 
-    // Проверяем, содержит ли имя нецензурные слова
-    if (Profanity.check(rawName)) {
-      // Если да, отправляем ровно пять звёздочек (как ожидает тест)
-      await onSubmit('*****');
-    } else {
-      // Иначе отправляем как есть
-      await onSubmit(rawName);
-    }
+    // Очищаем имя от нецензурных слов – заменяет на звёздочки той же длины
+    const cleanedName = Profanity.clean(rawName);
 
+    await onSubmit(cleanedName);
     resetForm();
     setSubmitting(false);
   };

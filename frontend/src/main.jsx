@@ -9,8 +9,9 @@ import App from './App.jsx';
 import { store } from './store/index.js';
 import './i18n.js';
 
-// Загрузка словаря для фильтрации нецензурных слов
+// Загрузка словарей для фильтрации нецензурных слов
 Profanity.loadDictionary('ru');
+Profanity.loadDictionary('en'); // добавили английский
 
 // Конфигурация Rollbar
 const rollbarConfig = {

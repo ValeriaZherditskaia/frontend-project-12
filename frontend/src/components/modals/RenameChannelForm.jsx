@@ -28,7 +28,6 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
       return;
     }
 
-    // Очищаем название от нецензурных слов
     const cleanedName = Profanity.clean(rawName);
 
     await onSubmit(cleanedName);

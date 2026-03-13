@@ -65,6 +65,7 @@ const resources = {
         renamed: 'Канал переименован',
         created: 'Канал создан',
         general: 'general',
+        management: 'Управление каналом',
       },
       chat: {
         title: 'Сообщения',

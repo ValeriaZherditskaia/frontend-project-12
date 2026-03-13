@@ -1,5 +1,3 @@
-// Хук для авто-высоты textarea
-
 import { useEffect, useRef } from 'react'
 
 const useAutoResize = (value) => {

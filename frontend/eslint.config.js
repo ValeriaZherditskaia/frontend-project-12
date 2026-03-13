@@ -7,7 +7,6 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
-  // Подключаем рекомендуемые стилистические правила с автоисправлением
   stylistic.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],

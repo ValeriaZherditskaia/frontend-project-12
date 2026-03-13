@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 export const useToast = () => {
   const { t } = useTranslation()
 
-  // Success: зелёный toast (канал создан/удалён)
   const success = (key) => {
     toast.success(t(key), {
       position: 'top-right',
@@ -16,7 +15,6 @@ export const useToast = () => {
     })
   }
 
-  // Error: красный toast (ошибки API/валидация)
   const error = (key, fallback = 'Неизвестная ошибка') => {
     toast.error(t(key) || fallback, {
       position: 'top-right',
@@ -24,7 +22,6 @@ export const useToast = () => {
     })
   }
 
-  // Специальные ошибки
   const networkError = () => error('notifications.error.network')
   const loadError = () => error('notifications.error.loadData')
   const serverError = () => error('notifications.error.server')

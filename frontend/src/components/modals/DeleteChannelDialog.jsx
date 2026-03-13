@@ -1,5 +1,3 @@
-// Диалог удаления
-
 import { useTranslation } from 'react-i18next'
 import ModalButtons from './ModalButtons.jsx'
 

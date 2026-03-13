@@ -1,5 +1,3 @@
-// Список каналов (объединяет)
-
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentChannelId, openModal } from '../../slices/channelsSlice.js'
 import ChannelsHeader from './ChannelsHeader.jsx'

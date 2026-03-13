@@ -1,5 +1,3 @@
-// Общие кнопки
-
 import { Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 

@@ -15,7 +15,7 @@ const resources = {
         submit: 'Войти',
         noAccount: 'Нет аккаунта?',
         signupLink: 'Регистрация',
-        error: 'Неверные имя пользователя или пароль', // ← исправлено
+        error: 'Неверные имя пользователя или пароль',
         loggingIn: 'Вход...',
         validation: {
           username: {

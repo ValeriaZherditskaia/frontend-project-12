@@ -1,5 +1,3 @@
-// Основной
-
 import { useDispatch, useSelector } from 'react-redux'
 import { Modal, Alert } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'

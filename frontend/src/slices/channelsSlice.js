@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { channelsApi } from './api/channelsApi.js'
 import { handlePending, handleRejected } from './helpers/thunkHelpers.js'
 
-// ---------- Thunks ----------
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
   async (_, { rejectWithValue }) => {
@@ -51,7 +50,6 @@ export const deleteChannel = createAsyncThunk(
   },
 )
 
-// ---------- Начальное состояние ----------
 const initialState = {
   entities: [],
   currentChannelId: null,
@@ -64,7 +62,6 @@ const initialState = {
   },
 }
 
-// ---------- Слайс ----------
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
@@ -110,7 +107,6 @@ const channelsSlice = createSlice({
     }
 
     builder
-      // fetchChannels
       .addCase(fetchChannels.pending, handlePending)
       .addCase(fetchChannels.fulfilled, (state, action) => {
         handleFulfilled(state, action, { setEntities: true })
@@ -120,7 +116,6 @@ const channelsSlice = createSlice({
       })
       .addCase(fetchChannels.rejected, handleRejected)
 
-      // createChannel
       .addCase(createChannel.pending, handlePending)
       .addCase(createChannel.fulfilled, (state, action) => {
         console.log('✅ createChannel.fulfilled payload:', action.payload)
@@ -128,14 +123,12 @@ const channelsSlice = createSlice({
       })
       .addCase(createChannel.rejected, handleRejected)
 
-      // renameChannel
       .addCase(renameChannel.pending, handlePending)
       .addCase(renameChannel.fulfilled, (state, action) => {
         handleFulfilled(state, action, { updateEntity: true })
       })
       .addCase(renameChannel.rejected, handleRejected)
 
-      // deleteChannel
       .addCase(deleteChannel.pending, handlePending)
       .addCase(deleteChannel.fulfilled, (state, action) => {
         handleFulfilled(state, action, { removeEntity: true, switchToGeneral: true })

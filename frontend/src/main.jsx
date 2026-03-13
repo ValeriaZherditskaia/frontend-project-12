@@ -11,9 +11,8 @@ import './i18n.js'
 
 // Загрузка словарей для фильтрации нецензурных слов
 Profanity.loadDictionary('ru')
-Profanity.loadDictionary('en') // добавили английский
+Profanity.loadDictionary('en')
 
-// Конфигурация Rollbar
 const rollbarConfig = {
   accessToken: '50dadf468b9e4152be786f4f7394653f',
   captureUncaught: true,

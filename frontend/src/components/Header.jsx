@@ -9,11 +9,9 @@ function Header() {
   const handleLogoClick = (e) => {
     e.preventDefault()
     if (token) {
-      // Если авторизован - перезагружаем главную
       window.location.href = '/'
     }
     else {
-      // Если не авторизован - идём на логин
       navigate('/login')
     }
   }

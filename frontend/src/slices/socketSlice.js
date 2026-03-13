@@ -9,7 +9,6 @@ export const initSocket = createAsyncThunk(
       return rejectWithValue('No token')
     }
 
-    // Подключаемся к корневому пути, который будет проксирован на сервер
     const socket = io({
       auth: { token },
       reconnection: true,

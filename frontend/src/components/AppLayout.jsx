@@ -17,7 +17,6 @@ function AppLayout() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const socket = useSelector(state => state.socket.socket)
-  // connected не используется, но можно оставить для возможного отображения статуса
 
   useEffect(() => {
     const token = localStorage.getItem('token')

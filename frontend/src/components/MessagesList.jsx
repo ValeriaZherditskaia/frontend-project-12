@@ -6,12 +6,10 @@ function MessagesList() {
   const currentChannelId = useSelector(state => state.channels.currentChannelId)
   const messagesEndRef = useRef(null)
 
-  // Фильтруем сообщения по текущему каналу и сортируем по времени
   const currentMessages = messages
     .filter(msg => Number(msg.channelId) === Number(currentChannelId))
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
-  // Автоскролл к последнему сообщению
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [currentMessages])

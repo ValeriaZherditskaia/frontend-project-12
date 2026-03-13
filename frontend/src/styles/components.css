@@ -24,7 +24,6 @@
   color: var(--color-primary-hover) !important;
 }
 
-/* ===== КНОПКИ КАНАЛОВ (НЕ ТРОГАЕМ КНОПКУ +) ===== */
 /* Стили только для кнопок внутри списка каналов */
 .channels-panel .nav-item .btn-sm,
 .channels-panel .nav-item .btn-dark,

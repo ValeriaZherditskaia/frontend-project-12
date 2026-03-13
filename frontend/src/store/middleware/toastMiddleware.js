@@ -1,6 +1,5 @@
-// frontend/src/store/middleware/toastMiddleware.js
 import { toast } from 'react-toastify'
-import i18n from '../../i18n.js' // ← импорт твоего i18n-движка
+import i18n from '../../i18n.js'
 
 // Карта: тип экшена → ключ перевода
 const TOAST_CONFIG = {
@@ -26,10 +25,10 @@ export const toastMiddleware = () => next => (action) => {
     const messageKey = TOAST_CONFIG[action.type]
     const isSuccess = action.type.endsWith('/fulfilled')
 
-    const text = i18n.t(messageKey) // ← ПОЛУЧАЕМ ПЕРЕВОД ПО КЛЮЧУ
+    const text = i18n.t(messageKey)
 
     toast[isSuccess ? 'success' : 'error'](text, {
-      toastId: action.type, // по одному toast'у на тип экшена
+      toastId: action.type,
       position: 'top-right',
       autoClose: isSuccess ? 3000 : 5000,
     })

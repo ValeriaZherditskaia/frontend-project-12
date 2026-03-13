@@ -1,5 +1,3 @@
-// Иконка отправки
-
 const SendIcon = () => (
   <svg
     width="20"

@@ -1,5 +1,3 @@
-// Настройка axios с токеном
-
 import axios from 'axios'
 
 const axiosInstance = axios.create({

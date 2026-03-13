@@ -1,5 +1,3 @@
-// API-функции для каналов
-
 import axios from './axiosConfig.js'
 
 export const channelsApi = {

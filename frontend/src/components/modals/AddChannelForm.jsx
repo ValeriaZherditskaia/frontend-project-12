@@ -1,4 +1,4 @@
-import { Form, FormControl } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { Formik, Field, Form as FormikForm } from 'formik'
 import Profanity from 'leo-profanity'
 import { useTranslation } from 'react-i18next'

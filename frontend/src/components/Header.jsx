@@ -1,32 +1,33 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'
+import { useNavigate, Link } from 'react-router-dom'
 
 function Header() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
 
   const handleLogoClick = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (token) {
       // Если авторизован - перезагружаем главную
-      window.location.href = '/';
-    } else {
-      // Если не авторизован - идём на логин
-      navigate('/login');
+      window.location.href = '/'
     }
-  };
+    else {
+      // Если не авторизован - идём на логин
+      navigate('/login')
+    }
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    navigate('/login');
-  };
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    navigate('/login')
+  }
 
   return (
     <header className="app-header">
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="h4 mb-0 text-decoration-none text-dark"
         onClick={handleLogoClick}
       >
@@ -42,7 +43,7 @@ function Header() {
         </button>
       )}
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

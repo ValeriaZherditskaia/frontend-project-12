@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 const resources = {
   ru: {
@@ -15,7 +15,7 @@ const resources = {
         submit: 'Войти',
         noAccount: 'Нет аккаунта?',
         signupLink: 'Регистрация',
-        error: 'Неверные имя пользователя или пароль',  // ← исправлено
+        error: 'Неверные имя пользователя или пароль', // ← исправлено
         loggingIn: 'Вход...',
         validation: {
           username: {
@@ -112,7 +112,7 @@ const resources = {
         socket: {
           connected: 'Подключено к чату',
           disconnected: 'Соединение с сервером потеряно',
-        }
+        },
       },
       notFound: {
         message: 'Страница не найдена',
@@ -120,7 +120,7 @@ const resources = {
       },
     },
   },
-};
+}
 
 i18n
   .use(initReactI18next)
@@ -131,6 +131,6 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-  });
+  })
 
-export default i18n;
+export default i18n

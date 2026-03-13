@@ -1,7 +1,7 @@
 // Общие кнопки
 
-import { Button } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 const ModalButtons = ({
   onCancel,
@@ -12,7 +12,7 @@ const ModalButtons = ({
   isLoading = false,
   loadingText = 'modals.saving',
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="d-flex justify-content-end gap-2">
@@ -31,7 +31,7 @@ const ModalButtons = ({
         {isLoading ? t(loadingText) : confirmText}
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default ModalButtons;
+export default ModalButtons

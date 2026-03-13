@@ -1,19 +1,19 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
-import * as yup from 'yup';
-import axios from 'axios';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useNavigate, Link } from 'react-router-dom'
+import { Formik, Form, Field } from 'formik'
+import * as yup from 'yup'
+import axios from 'axios'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function LoginPage() {
-  const navigate = useNavigate();
-  const [error, setError] = useState('');
-  const { t } = useTranslation();
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
+  const { t } = useTranslation()
 
   const validationSchema = yup.object({
     username: yup.string().required(t('login.validation.username.required')),
     password: yup.string().required(t('login.validation.password.required')),
-  });
+  })
 
   return (
     <div className="container-fluid h-100">
@@ -33,21 +33,23 @@ function LoginPage() {
                 validateOnChange={false}
                 onSubmit={async (values, { setSubmitting }) => {
                   try {
-                    setError('');
+                    setError('')
                     const response = await axios.post('/api/v1/login', {
                       username: values.username,
                       password: values.password,
-                    });
-                    
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('username', response.data.username);
-                    
-                    navigate('/');
-                  } catch (err) {
-                    setError(t('login.error'));
-                    console.error('Login error:', err.response?.data);
-                  } finally {
-                    setSubmitting(false);
+                    })
+
+                    localStorage.setItem('token', response.data.token)
+                    localStorage.setItem('username', response.data.username)
+
+                    navigate('/')
+                  }
+                  catch (err) {
+                    setError(t('login.error'))
+                    console.error('Login error:', err.response?.data)
+                  }
+                  finally {
+                    setSubmitting(false)
                   }
                 }}
               >
@@ -110,7 +112,10 @@ function LoginPage() {
 
             <div className="card-footer p-4 bg-light">
               <div className="text-center">
-                <span className="text-muted">{t('login.noAccount')} </span>
+                <span className="text-muted">
+                  {t('login.noAccount')}
+                  {' '}
+                </span>
                 <Link to="/signup" className="text-primary text-decoration-none fw-semibold">
                   {t('login.signupLink')}
                 </Link>
@@ -120,7 +125,7 @@ function LoginPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

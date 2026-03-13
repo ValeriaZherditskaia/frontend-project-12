@@ -1,8 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import uiReducer from '../slices/uiSlice.js';
-import channelsReducer from '../slices/channelsSlice.js';
-import socketReducer from '../slices/socketSlice.js';
-import { toastMiddleware } from './middleware/toastMiddleware.js';
+import { configureStore } from '@reduxjs/toolkit'
+import uiReducer from '../slices/uiSlice.js'
+import channelsReducer from '../slices/channelsSlice.js'
+import socketReducer from '../slices/socketSlice.js'
+import { toastMiddleware } from './middleware/toastMiddleware.js'
 
 export const store = configureStore({
   reducer: {
@@ -10,13 +10,13 @@ export const store = configureStore({
     channels: channelsReducer,
     socket: socketReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ['socket/initSocket/fulfilled'],
-        ignoredPaths: ['socket.socket']
-      }
+        ignoredPaths: ['socket.socket'],
+      },
     }).concat(toastMiddleware),
-});
+})
 
-export default store;
+export default store

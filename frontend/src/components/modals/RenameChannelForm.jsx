@@ -1,39 +1,39 @@
-import { Form, FormControl } from 'react-bootstrap';
-import { Formik, Field, Form as FormikForm } from 'formik';
-import Profanity from 'leo-profanity';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { CHANNEL_SCHEMA } from '../../slices/validationSchemas.js';
-import ModalButtons from './ModalButtons.jsx';
+import { Form, FormControl } from 'react-bootstrap'
+import { Formik, Field, Form as FormikForm } from 'formik'
+import Profanity from 'leo-profanity'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import { CHANNEL_SCHEMA } from '../../slices/validationSchemas.js'
+import ModalButtons from './ModalButtons.jsx'
 
 const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
-  const { t } = useTranslation();
-  const channels = useSelector((state) => state.channels.entities);
+  const { t } = useTranslation()
+  const channels = useSelector(state => state.channels.entities)
   const existingNames = channels
     .filter(c => c.id !== channel?.id)
-    .map(c => c.name);
+    .map(c => c.name)
 
   const handleSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
-    const rawName = values.name.trim();
+    const rawName = values.name.trim()
 
     if (!rawName) {
-      setFieldError('name', t('validation.required'));
-      setSubmitting(false);
-      return;
+      setFieldError('name', t('validation.required'))
+      setSubmitting(false)
+      return
     }
 
     if (existingNames.includes(rawName)) {
-      setFieldError('name', t('modals.unique'));
-      setSubmitting(false);
-      return;
+      setFieldError('name', t('modals.unique'))
+      setSubmitting(false)
+      return
     }
 
-    const cleanedName = Profanity.clean(rawName);
+    const cleanedName = Profanity.clean(rawName)
 
-    await onSubmit(cleanedName);
-    resetForm();
-    setSubmitting(false);
-  };
+    await onSubmit(cleanedName)
+    resetForm()
+    setSubmitting(false)
+  }
 
   return (
     <Formik
@@ -76,7 +76,7 @@ const RenameChannelForm = ({ channel, onSubmit, onCancel, isLoading }) => {
         </FormikForm>
       )}
     </Formik>
-  );
-};
+  )
+}
 
-export default RenameChannelForm;
+export default RenameChannelForm

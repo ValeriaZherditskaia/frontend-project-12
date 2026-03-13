@@ -1,12 +1,12 @@
-import { forwardRef } from 'react';
+import { forwardRef } from 'react'
 
-const FormTextarea = forwardRef(({ 
-  value, 
-  onChange, 
-  onKeyDown, 
-  disabled, 
+const FormTextarea = forwardRef(({
+  value,
+  onChange,
+  onKeyDown,
+  disabled,
   placeholder,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
 }, ref) => (
   <textarea
     ref={ref}
@@ -20,8 +20,8 @@ const FormTextarea = forwardRef(({
     rows={1}
     aria-label={ariaLabel}
   />
-));
+))
 
-FormTextarea.displayName = 'FormTextarea';
+FormTextarea.displayName = 'FormTextarea'
 
-export default FormTextarea;
+export default FormTextarea

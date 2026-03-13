@@ -1,10 +1,10 @@
 // Диалог удаления
 
-import { useTranslation } from 'react-i18next';
-import ModalButtons from './ModalButtons.jsx';
+import { useTranslation } from 'react-i18next'
+import ModalButtons from './ModalButtons.jsx'
 
 const DeleteChannelDialog = ({ onConfirm, onCancel, isLoading }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <>
@@ -21,7 +21,7 @@ const DeleteChannelDialog = ({ onConfirm, onCancel, isLoading }) => {
         loadingText="modals.deleting"
       />
     </>
-  );
-};
+  )
+}
 
-export default DeleteChannelDialog;
+export default DeleteChannelDialog

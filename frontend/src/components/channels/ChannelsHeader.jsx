@@ -1,9 +1,9 @@
 // Заголовок с кнопкой "+"
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 const ChannelsHeader = ({ onAddClick }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="d-flex align-items-center p-3" style={{ backgroundColor: '#f8f9fa' }}>
@@ -19,7 +19,7 @@ const ChannelsHeader = ({ onAddClick }) => {
         +
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default ChannelsHeader;
+export default ChannelsHeader

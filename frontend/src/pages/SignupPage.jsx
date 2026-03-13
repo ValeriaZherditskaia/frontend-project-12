@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
-import * as yup from 'yup';
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Formik, Form, Field } from 'formik'
+import * as yup from 'yup'
+import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 
 function SignupPage() {
-  const navigate = useNavigate();
-  const [serverError, setServerError] = useState('');
-  const { t } = useTranslation();
+  const navigate = useNavigate()
+  const [serverError, setServerError] = useState('')
+  const { t } = useTranslation()
 
   const validationSchema = yup.object({
     username: yup
@@ -25,28 +25,31 @@ function SignupPage() {
       .string()
       .oneOf([yup.ref('password')], t('signup.validation.passwordConfirm.mismatch'))
       .required(t('signup.validation.passwordConfirm.required')),
-  });
+  })
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      setServerError('');
+      setServerError('')
       const response = await axios.post('/api/v1/signup', {
         username: values.username,
         password: values.password,
-      });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', response.data.username);
-      navigate('/');
-    } catch (error) {
-      if (error.response?.status === 409) {
-        setServerError(t('signup.userExists'));
-      } else {
-        setServerError(t('signup.serverError'));
-      }
-    } finally {
-      setSubmitting(false);
+      })
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('username', response.data.username)
+      navigate('/')
     }
-  };
+    catch (error) {
+      if (error.response?.status === 409) {
+        setServerError(t('signup.userExists'))
+      }
+      else {
+        setServerError(t('signup.serverError'))
+      }
+    }
+    finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className="bg-light h-100 d-flex align-items-center justify-content-center">
@@ -146,7 +149,7 @@ function SignupPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default SignupPage;
+export default SignupPage

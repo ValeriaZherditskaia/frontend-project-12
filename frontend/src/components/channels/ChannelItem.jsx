@@ -1,38 +1,38 @@
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import Dropdown from 'react-bootstrap/Dropdown';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { openModal } from '../../slices/channelsSlice.js';
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import Dropdown from 'react-bootstrap/Dropdown'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import { openModal } from '../../slices/channelsSlice.js'
 
 const ChannelItem = ({ channel, isActive, onChannelClick }) => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const handleRename = () => {
-    dispatch(openModal({ type: 'rename', channelId: channel.id }));
-  };
+    dispatch(openModal({ type: 'rename', channelId: channel.id }))
+  }
 
   const handleRemove = () => {
-    dispatch(openModal({ type: 'remove', channelId: channel.id }));
-  };
+    dispatch(openModal({ type: 'remove', channelId: channel.id }))
+  }
 
   const buttonClasses = `w-100 text-start btn btn-sm rounded-0 px-3 py-2 d-flex align-items-center ${
     isActive ? 'btn-dark text-white' : 'btn-light border-0'
-  }`;
+  }`
 
   const buttonStyle = {
     backgroundColor: isActive ? '#495057' : 'transparent',
     border: 'none',
-  };
+  }
 
-  const prefixClass = `me-2 ${isActive ? 'text-white-50' : 'text-secondary'}`;
+  const prefixClass = `me-2 ${isActive ? 'text-white-50' : 'text-secondary'}`
 
   const content = (
     <>
       <span className={prefixClass}>#</span>
       <span className="flex-grow-1 text-truncate">{channel.name}</span>
     </>
-  );
+  )
 
   if (!channel.removable) {
     return (
@@ -45,7 +45,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
       >
         {content}
       </button>
-    );
+    )
   }
 
   return (
@@ -85,7 +85,7 @@ const ChannelItem = ({ channel, isActive, onChannelClick }) => {
         </Dropdown.Menu>
       </Dropdown>
     </ButtonGroup>
-  );
-};
+  )
+}
 
-export default ChannelItem;
+export default ChannelItem

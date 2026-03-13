@@ -1,19 +1,19 @@
 // Хук для авто-высоты textarea
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react'
 
 const useAutoResize = (value) => {
-  const textareaRef = useRef(null);
+  const textareaRef = useRef(null)
 
   useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+    const textarea = textareaRef.current
+    if (!textarea) return
 
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }, [value]);
+    textarea.style.height = 'auto'
+    textarea.style.height = `${textarea.scrollHeight}px`
+  }, [value])
 
-  return textareaRef;
-};
+  return textareaRef
+}
 
-export default useAutoResize;
+export default useAutoResize

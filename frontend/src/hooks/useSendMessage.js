@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import Profanity from 'leo-profanity'
 import { useTranslation } from 'react-i18next'
@@ -7,13 +7,12 @@ import { useSendMessageMutation } from '../services/api'
 
 const useSendMessage = () => {
   const { t } = useTranslation()
-  const [sending, setSending] = useState(false)
-  const [sendMessageMutation] = useSendMessageMutation()
+  const [sendMessage, { isLoading }] = useSendMessageMutation()
 
   const activeChannelId = useSelector(state => state.ui.currentChannelId)
   const username = localStorage.getItem('username') || t('app.guest')
 
-  const sendMessage = useCallback(
+  const sendMessageFn = useCallback(
     async (text) => {
       const trimmedText = text.trim()
       if (!trimmedText || !activeChannelId) return false
@@ -21,8 +20,7 @@ const useSendMessage = () => {
       const cleanedText = Profanity.clean(trimmedText)
 
       try {
-        setSending(true)
-        await sendMessageMutation({
+        await sendMessage({
           text: cleanedText,
           channelId: activeChannelId,
           username,
@@ -34,14 +32,11 @@ const useSendMessage = () => {
         toast.error(t('notifications.error.network'))
         return false
       }
-      finally {
-        setSending(false)
-      }
     },
-    [activeChannelId, username, t, sendMessageMutation],
+    [activeChannelId, username, t, sendMessage],
   )
 
-  return { sendMessage, sending }
+  return { sendMessage: sendMessageFn, sending: isLoading }
 }
 
 export default useSendMessage

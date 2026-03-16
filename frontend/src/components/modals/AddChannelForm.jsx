@@ -2,13 +2,13 @@ import { Form } from 'react-bootstrap'
 import { Formik, Field, Form as FormikForm } from 'formik'
 import Profanity from 'leo-profanity'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useGetChannelsQuery } from '../../services/api'
 import { CHANNEL_SCHEMA } from '../../slices/validationSchemas.js'
 import ModalButtons from './ModalButtons.jsx'
 
 const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
   const { t } = useTranslation()
-  const channels = useSelector(state => state.channels.entities)
+  const { data: channels = [] } = useGetChannelsQuery()
   const existingNames = channels.map(c => c.name)
 
   const handleSubmit = async (values, { setSubmitting, setFieldError, resetForm }) => {
@@ -26,7 +26,6 @@ const AddChannelForm = ({ onSubmit, onCancel, isLoading }) => {
       return
     }
 
-    // Очищаем имя от нецензурных слов – заменяет на звёздочки той же длины
     const cleanedName = Profanity.clean(rawName)
 
     await onSubmit(cleanedName)

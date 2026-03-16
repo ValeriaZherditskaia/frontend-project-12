@@ -48,10 +48,12 @@ function LoginPage() {
                     }))
 
                     navigate('/')
-                  } catch (err) {
+                  }
+                  catch (err) {
                     setError(t('login.error'))
                     console.error('Login error:', err.response?.data)
-                  } finally {
+                  }
+                  finally {
                     setSubmitting(false)
                   }
                 }}

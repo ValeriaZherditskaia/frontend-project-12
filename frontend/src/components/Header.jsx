@@ -11,7 +11,8 @@ function Header() {
     e.preventDefault()
     if (isAuthenticated) {
       window.location.href = '/'
-    } else {
+    }
+    else {
       navigate('/login')
     }
   }

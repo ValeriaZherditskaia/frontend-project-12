@@ -42,13 +42,16 @@ function SignupPage() {
         username: response.data.username,
       }))
       navigate('/')
-    } catch (error) {
+    }
+    catch (error) {
       if (error.response?.status === 409) {
         setServerError(t('signup.userExists'))
-      } else {
+      }
+      else {
         setServerError(t('signup.serverError'))
       }
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }

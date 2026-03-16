@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import Dropdown from 'react-bootstrap/Dropdown'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import { openModal } from '../../slices/uiSlice.js';
+import { openModal } from '../../slices/uiSlice.js'
 
 const ChannelItem = ({ channel, isActive, onChannelClick }) => {
   const dispatch = useDispatch()

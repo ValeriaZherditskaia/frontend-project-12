@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiReducer from '../slices/uiSlice.js'
-import channelsReducer from '../slices/channelsSlice.js'
+import { chatApi } from '../services/api'
 import authReducer from '../slices/authSlice.js'
+import uiReducer from '../slices/uiSlice.js'
 
 export const store = configureStore({
   reducer: {
-    ui: uiReducer,
-    channels: channelsReducer,
     auth: authReducer,
+    ui: uiReducer,
+    [chatApi.reducerPath]: chatApi.reducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(chatApi.middleware),
 })
-
-export default store

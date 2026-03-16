@@ -3,8 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
-import { fetchMessages, addMessage } from '../slices/uiSlice.js'
-import { fetchChannels } from '../slices/channelsSlice.js'
+import { chatApi } from '../services/api'
 import { connectSocket, disconnectSocket } from '../services/socket.js'
 import ChannelsList from './channels/ChannelsList.jsx'
 import ChatHeader from './ChatHeader.jsx'
@@ -24,9 +23,6 @@ function AppLayout() {
       return
     }
 
-    dispatch(fetchChannels())
-    dispatch(fetchMessages())
-
     const socket = connectSocket(token)
 
     const handleConnect = () => {
@@ -38,7 +34,11 @@ function AppLayout() {
     }
 
     const handleNewMessage = (message) => {
-      dispatch(addMessage(message))
+      dispatch(
+        chatApi.util.updateQueryData('getMessages', undefined, (draft) => {
+          draft.push(message)
+        }),
+      )
     }
 
     socket.on('connect', handleConnect)

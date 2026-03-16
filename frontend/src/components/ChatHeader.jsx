@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { useGetChannelsQuery, useGetMessagesQuery } from '../services/api'
 
 function ChatHeader() {
   const { t } = useTranslation()
-  const { entities: channelsList, currentChannelId } = useSelector(state => state.channels)
-  const messages = useSelector(state => state.ui.messages || [])
+  const { data: channels = [] } = useGetChannelsQuery()
+  const { data: messages = [] } = useGetMessagesQuery()
+  const currentChannelId = useSelector(state => state.ui.currentChannelId)
 
-  const currentChannel = channelsList.find(c => c.id === currentChannelId) || channelsList[0]
+  const currentChannel = channels.find(c => c.id === currentChannelId) || channels[0]
   const count = messages.filter(msg => msg.channelId === currentChannelId).length
 
   return (

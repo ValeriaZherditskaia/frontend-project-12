@@ -1,50 +1,33 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createSlice } from '@reduxjs/toolkit'
 
-export const fetchMessages = createAsyncThunk(
-  'ui/fetchMessages',
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token')
-    try {
-      const response = await axios.get('/api/v1/messages', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      return response.data
-    }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка загрузки сообщений')
-    }
+const initialState = {
+  currentChannelId: 1,
+  modal: {
+    isOpen: false,
+    type: null,
+    channelId: null,
   },
-)
+}
 
 const uiSlice = createSlice({
   name: 'ui',
-  initialState: {
-    messages: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
-    addMessage: (state, action) => {
-      state.messages.push(action.payload)
+    setCurrentChannelId: (state, action) => {
+      state.currentChannelId = action.payload
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchMessages.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(fetchMessages.fulfilled, (state, action) => {
-        state.loading = false
-        state.messages = action.payload
-      })
-      .addCase(fetchMessages.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
+    openModal: (state, action) => {
+      state.modal.isOpen = true
+      state.modal.type = action.payload.type
+      state.modal.channelId = action.payload.channelId || null
+    },
+    closeModal: (state) => {
+      state.modal.isOpen = false
+      state.modal.type = null
+      state.modal.channelId = null
+    },
   },
 })
 
-export const { addMessage } = uiSlice.actions
+export const { setCurrentChannelId, openModal, closeModal } = uiSlice.actions
 export default uiSlice.reducer

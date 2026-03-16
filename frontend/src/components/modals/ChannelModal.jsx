@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Modal, Alert } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+import { chatApi } from '../../services/api' // ← добавить импорт
 import {
-  closeModal,
-  createChannel,
-  renameChannel,
-  deleteChannel,
-  clearError,
-} from '../../slices/channelsSlice.js'
+  useAddChannelMutation,
+  useRenameChannelMutation,
+  useDeleteChannelMutation,
+} from '../../services/api'
+import { closeModal, setCurrentChannelId } from '../../slices/uiSlice'
 import AddChannelForm from './AddChannelForm.jsx'
 import RenameChannelForm from './RenameChannelForm.jsx'
 import DeleteChannelDialog from './DeleteChannelDialog.jsx'
@@ -23,12 +23,19 @@ function ChannelModal() {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const {
-    modal: { type, channelId, isOpen },
-    error,
-    loading,
-    entities: channels,
-  } = useSelector(state => state.channels)
+  const { modal } = useSelector(state => state.ui)
+  const { type, channelId, isOpen } = modal
+  const currentChannelId = useSelector(state => state.ui.currentChannelId)
+
+  const [addChannel, { isLoading: isAdding }] = useAddChannelMutation()
+  const [renameChannel, { isLoading: isRenaming }] = useRenameChannelMutation()
+  const [deleteChannel, { isLoading: isDeleting }] = useDeleteChannelMutation()
+
+  // Получаем список каналов из кеша RTK Query
+  const channels = useSelector((state) => {
+    const queryData = state[chatApi.reducerPath]?.queries['getChannels(undefined)']
+    return queryData?.data || []
+  })
 
   const currentChannel = channels.find(c => c.id === channelId)
 
@@ -38,34 +45,38 @@ function ChannelModal() {
 
   const handleAdd = async (name) => {
     try {
-      await dispatch(createChannel(name)).unwrap()
+      const newChannel = await addChannel(name).unwrap()
+      dispatch(setCurrentChannelId(newChannel.id))
       toast.success(t('notifications.channels.created'))
       handleClose()
     }
-    catch (err) {
-      console.error('❌ Add error:', err)
+    catch {
+      toast.error(t('notifications.error.server'))
     }
   }
 
   const handleRename = async (name) => {
     try {
-      await dispatch(renameChannel({ id: channelId, name })).unwrap()
+      await renameChannel({ id: channelId, name }).unwrap()
       toast.success(t('notifications.channels.renamed'))
       handleClose()
     }
-    catch (err) {
-      console.error('Rename error:', err)
+    catch {
+      toast.error(t('notifications.error.server'))
     }
   }
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteChannel(channelId)).unwrap()
+      await deleteChannel(channelId).unwrap()
+      if (currentChannelId === channelId) {
+        dispatch(setCurrentChannelId(1)) // переключаем на general
+      }
       toast.success(t('notifications.channels.removed'))
       handleClose()
     }
-    catch (err) {
-      console.error('Delete error:', err)
+    catch {
+      toast.error(t('notifications.error.server'))
     }
   }
 
@@ -75,6 +86,8 @@ function ChannelModal() {
     ? t('modals.remove')
     : t(MODAL_TITLES[type])
 
+  const isLoading = isAdding || isRenaming || isDeleting
+
   return (
     <Modal show={isOpen} onHide={handleClose} centered size="sm">
       <Modal.Header closeButton>
@@ -82,21 +95,11 @@ function ChannelModal() {
       </Modal.Header>
 
       <Modal.Body>
-        {error && (
-          <Alert
-            variant="danger"
-            dismissible
-            onClose={() => dispatch(clearError())}
-          >
-            {error}
-          </Alert>
-        )}
-
         {type === 'add' && (
           <AddChannelForm
             onSubmit={handleAdd}
             onCancel={handleClose}
-            isLoading={loading}
+            isLoading={isLoading}
           />
         )}
 
@@ -105,7 +108,7 @@ function ChannelModal() {
             channel={currentChannel}
             onSubmit={handleRename}
             onCancel={handleClose}
-            isLoading={loading}
+            isLoading={isLoading}
           />
         )}
 
@@ -114,7 +117,7 @@ function ChannelModal() {
             channel={currentChannel}
             onConfirm={handleDelete}
             onCancel={handleClose}
-            isLoading={loading}
+            isLoading={isLoading}
           />
         )}
       </Modal.Body>

@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { setCurrentChannelId, openModal } from '../../slices/channelsSlice.js'
+import { useGetChannelsQuery } from '../services/api'
+import { setCurrentChannelId, openModal } from '../../slices/uiSlice' // импорт из нового uiSlice
 import ChannelsHeader from './ChannelsHeader.jsx'
 import ChannelItem from './ChannelItem.jsx'
 
 const ChannelsList = () => {
   const dispatch = useDispatch()
-  const channels = useSelector(state => state.channels.entities)
-  const activeChannelId = useSelector(state => state.channels.currentChannelId)
+  const { data: channels = [], isLoading } = useGetChannelsQuery()
+  const activeChannelId = useSelector(state => state.ui.currentChannelId)
 
   const handleChannelClick = (channelId) => {
     dispatch(setCurrentChannelId(channelId))
@@ -14,6 +15,10 @@ const ChannelsList = () => {
 
   const handleAddChannel = () => {
     dispatch(openModal({ type: 'add' }))
+  }
+
+  if (isLoading) {
+    return <div className="p-3">Загрузка каналов...</div>
   }
 
   return (

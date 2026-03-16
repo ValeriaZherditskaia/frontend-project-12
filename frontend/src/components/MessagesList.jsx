@@ -1,9 +1,10 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useRef } from 'react'
+import { useGetMessagesQuery } from '../services/api'
 
 function MessagesList() {
-  const messages = useSelector(state => state.ui.messages || [])
-  const currentChannelId = useSelector(state => state.channels.currentChannelId)
+  const { data: messages = [] } = useGetMessagesQuery()
+  const currentChannelId = useSelector(state => state.ui.currentChannelId)
   const messagesEndRef = useRef(null)
 
   const currentMessages = messages

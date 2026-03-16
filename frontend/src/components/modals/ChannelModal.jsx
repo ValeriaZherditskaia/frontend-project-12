@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Modal, Alert } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import {
   closeModal,
   createChannel,
@@ -36,10 +37,9 @@ function ChannelModal() {
   }
 
   const handleAdd = async (name) => {
-    console.log('📤 Sending channel name to server:', name)
     try {
-      const result = await dispatch(createChannel(name)).unwrap()
-      console.log('📥 Channel created, received from server:', result)
+      await dispatch(createChannel(name)).unwrap()
+      toast.success(t('notifications.channels.created'))
       handleClose()
     }
     catch (err) {
@@ -50,6 +50,7 @@ function ChannelModal() {
   const handleRename = async (name) => {
     try {
       await dispatch(renameChannel({ id: channelId, name })).unwrap()
+      toast.success(t('notifications.channels.renamed'))
       handleClose()
     }
     catch (err) {
@@ -60,6 +61,7 @@ function ChannelModal() {
   const handleDelete = async () => {
     try {
       await dispatch(deleteChannel(channelId)).unwrap()
+      toast.success(t('notifications.channels.removed'))
       handleClose()
     }
     catch (err) {

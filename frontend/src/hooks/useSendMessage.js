@@ -23,7 +23,6 @@ const useSendMessage = () => {
       const trimmedText = text.trim()
       if (!trimmedText || !activeChannelId) return false
 
-      // Очищаем текст от нецензурных слов
       const cleanedText = Profanity.clean(trimmedText)
 
       try {
@@ -37,6 +36,7 @@ const useSendMessage = () => {
           },
           { headers: { Authorization: `Bearer ${token}` } },
         )
+        toast.success(t('notifications.messages.added'))
         return true
       }
       catch (error) {

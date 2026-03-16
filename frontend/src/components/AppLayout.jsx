@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { fetchMessages, addMessage } from '../slices/uiSlice.js'
 import { fetchChannels } from '../slices/channelsSlice.js'
-import { initSocket, setConnected } from '../slices/socketSlice.js'
+import { connectSocket, disconnectSocket } from '../services/socket.js'
 import ChannelsList from './channels/ChannelsList.jsx'
 import ChatHeader from './ChatHeader.jsx'
 import MessagesList from './MessagesList.jsx'
@@ -16,7 +16,6 @@ function AppLayout() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const socket = useSelector(state => state.socket.socket)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -27,26 +26,18 @@ function AppLayout() {
 
     dispatch(fetchChannels())
     dispatch(fetchMessages())
-    dispatch(initSocket())
-  }, [dispatch, navigate])
 
-  useEffect(() => {
-    if (!socket) return
+    const socket = connectSocket(token)
 
     const handleConnect = () => {
-      console.log('✅ Socket connected')
-      dispatch(setConnected(true))
       toast.success(t('notifications.socket.connected'))
     }
 
     const handleDisconnect = () => {
-      console.log('❌ Socket disconnected')
-      dispatch(setConnected(false))
       toast.warn(t('notifications.socket.disconnected'))
     }
 
     const handleNewMessage = (message) => {
-      console.log('📨 Новое сообщение через сокет:', message)
       dispatch(addMessage(message))
     }
 
@@ -55,15 +46,16 @@ function AppLayout() {
     socket.on('newMessage', handleNewMessage)
 
     if (socket.connected) {
-      dispatch(setConnected(true))
+      handleConnect()
     }
 
     return () => {
       socket.off('connect', handleConnect)
       socket.off('disconnect', handleDisconnect)
       socket.off('newMessage', handleNewMessage)
+      disconnectSocket()
     }
-  }, [socket, dispatch, t])
+  }, [dispatch, navigate, t])
 
   return (
     <div className="chat-container">

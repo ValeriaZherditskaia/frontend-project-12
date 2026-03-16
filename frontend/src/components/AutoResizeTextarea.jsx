@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 
-const FormTextarea = forwardRef(({
+const AutoResizeTextarea = forwardRef(({
   value,
   onChange,
   onKeyDown,
@@ -22,6 +22,6 @@ const FormTextarea = forwardRef(({
   />
 ))
 
-FormTextarea.displayName = 'FormTextarea'
+AutoResizeTextarea.displayName = 'AutoResizeTextarea'
 
-export default FormTextarea
+export default AutoResizeTextarea

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import useAutoResize from '../hooks/useAutoResize.js'
 import useSendMessage from '../hooks/useSendMessage.js'
-import FormTextarea from './FormTextarea.jsx'
+import AutoResizeTextarea from './AutoResizeTextarea.jsx'
 import SendIcon from './SendIcon.jsx'
 
 function MessageForm() {
@@ -44,7 +44,7 @@ function MessageForm() {
     <div className="message-form-container">
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <FormTextarea
+          <AutoResizeTextarea
             ref={textareaRef}
             value={messageText}
             onChange={handleChange}

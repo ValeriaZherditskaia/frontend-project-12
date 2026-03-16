@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
-import { chatApi } from '../../services/api' // ← добавить импорт
+import { chatApi } from '../../services/api'
 import {
   useAddChannelMutation,
   useRenameChannelMutation,

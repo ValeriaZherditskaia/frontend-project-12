@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useGetChannelsQuery } from '../services/api'
-import { setCurrentChannelId, openModal } from '../../slices/uiSlice' // импорт из нового uiSlice
+import { useGetChannelsQuery } from '../../services/api'
+import { setCurrentChannelId, openModal } from '../../slices/uiSlice'
 import ChannelsHeader from './ChannelsHeader.jsx'
 import ChannelItem from './ChannelItem.jsx'
 

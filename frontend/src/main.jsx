@@ -1,24 +1,12 @@
 import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import Profanity from 'leo-profanity'
 import { Provider as RollbarProvider } from '@rollbar/react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/index.css'
 import App from './App.jsx'
 import { store } from './store/index.js'
-import './i18n.js'
-
-// Загрузка словарей для фильтрации нецензурных слов
-Profanity.loadDictionary('ru')
-Profanity.loadDictionary('en')
-
-const rollbarConfig = {
-  accessToken: '50dadf468b9e4152be786f4f7394653f',
-  captureUncaught: true,
-  captureUnhandledRejections: true,
-  environment: import.meta.env.MODE,
-}
+import { rollbarConfig } from './init.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

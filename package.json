@@ -13,12 +13,10 @@
   "license": "ISC",
   "author": "Valeria Zherditskaia",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.4",
-    "bootstrap": "^5.3.8"
+    "@hexlet/chat-server": "^2.0.4"
   }
 }

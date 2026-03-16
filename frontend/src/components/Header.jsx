@@ -1,24 +1,23 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 
 function Header() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  const { isAuthenticated, logout } = useAuth()
 
   const handleLogoClick = (e) => {
     e.preventDefault()
-    if (token) {
+    if (isAuthenticated) {
       window.location.href = '/'
-    }
-    else {
+    } else {
       navigate('/login')
     }
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
+    logout()
     navigate('/login')
   }
 
@@ -31,7 +30,7 @@ function Header() {
       >
         {t('app.name')}
       </Link>
-      {token && (
+      {isAuthenticated && (
         <button
           type="button"
           className="btn btn-primary btn-sm"

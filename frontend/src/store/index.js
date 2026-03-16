@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import uiReducer from '../slices/uiSlice.js'
 import channelsReducer from '../slices/channelsSlice.js'
 import socketReducer from '../slices/socketSlice.js'
+import authReducer from '../slices/authSlice.js'
 import { toastMiddleware } from './middleware/toastMiddleware.js'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     ui: uiReducer,
     channels: channelsReducer,
     socket: socketReducer,
+    auth: authReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

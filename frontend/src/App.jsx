@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css'
-import './styles/index.css'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { useAuth } from './hooks/useAuth'
 import Header from './components/Header'
 import AppLayout from './components/AppLayout'
 import LoginPage from './pages/LoginPage'
@@ -9,13 +9,13 @@ import SignupPage from './pages/SignupPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function PrivateRoute({ children }) {
-  const token = localStorage.getItem('token')
-  return token ? children : <Navigate to="/login" replace />
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? children : <Navigate to="/login" replace />
 }
 
 function PublicRoute({ children }) {
-  const token = localStorage.getItem('token')
-  return token ? <Navigate to="/" replace /> : children
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? <Navigate to="/" replace /> : children
 }
 
 function App() {

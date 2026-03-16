@@ -1,12 +1,15 @@
 import { useNavigate, Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { setCredentials } from '../slices/authSlice'
 
 function LoginPage() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [error, setError] = useState('')
   const { t } = useTranslation()
 
@@ -39,16 +42,16 @@ function LoginPage() {
                       password: values.password,
                     })
 
-                    localStorage.setItem('token', response.data.token)
-                    localStorage.setItem('username', response.data.username)
+                    dispatch(setCredentials({
+                      token: response.data.token,
+                      username: response.data.username,
+                    }))
 
                     navigate('/')
-                  }
-                  catch (err) {
+                  } catch (err) {
                     setError(t('login.error'))
                     console.error('Login error:', err.response?.data)
-                  }
-                  finally {
+                  } finally {
                     setSubmitting(false)
                   }
                 }}

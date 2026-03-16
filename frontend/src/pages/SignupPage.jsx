@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import { setCredentials } from '../slices/authSlice'
 
 function SignupPage() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [serverError, setServerError] = useState('')
   const { t } = useTranslation()
 
@@ -34,19 +37,18 @@ function SignupPage() {
         username: values.username,
         password: values.password,
       })
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('username', response.data.username)
+      dispatch(setCredentials({
+        token: response.data.token,
+        username: response.data.username,
+      }))
       navigate('/')
-    }
-    catch (error) {
+    } catch (error) {
       if (error.response?.status === 409) {
         setServerError(t('signup.userExists'))
-      }
-      else {
+      } else {
         setServerError(t('signup.serverError'))
       }
-    }
-    finally {
+    } finally {
       setSubmitting(false)
     }
   }
